@@ -1,3 +1,13 @@
+inst/lib
+.Rproj.user
+src/*.o
+src/*.so
+src/*.dll
+src/symbols.rds
+.Rhistory
+.RData
+.DS_Store
+
 # History files
 .Rhistory
 .Rapp.history
@@ -47,3 +57,5 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+
