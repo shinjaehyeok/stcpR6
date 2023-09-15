@@ -14,5 +14,6 @@ RCPP_MODULE(MixEEx) {
   .constructor<std::vector<double>>()
   .constructor<std::vector<double>, std::vector<double>>()
   .method("print", &MixE::print)
+  .method("getLogMixedValue", &MixE::getLogMixedValue)
   ;
 }
