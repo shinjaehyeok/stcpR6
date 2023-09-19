@@ -9,11 +9,11 @@
 // Expose (some of) the Student class
 RCPP_MODULE(MixEEx) {
   using namespace stcp; // Name used to "loadModule" in R script
-  Rcpp::class_<MixE>("MixE")       // This must be the C++ class name.
+  Rcpp::class_<MixE<ST>>("MixST")       // This must be the C++ class name.
   .constructor()
   .constructor<std::vector<double>>()
   .constructor<std::vector<double>, std::vector<double>>()
-  .method("print", &MixE::print)
-  .method("getLogMixedValue", &MixE::getLogMixedValue)
+  .method("print", &MixE<ST>::print)
+  .method("getLogMixedValue", &MixE<ST>::getLogMixedValue)
   ;
 }
