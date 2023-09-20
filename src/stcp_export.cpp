@@ -7,13 +7,13 @@
 #include "stcp.h"
 
 // Expose (some of) the Student class
-RCPP_MODULE(MixEEx) {
+RCPP_MODULE(MixSTNormalEx) {
   using namespace stcp; // Name used to "loadModule" in R script
-  Rcpp::class_<MixE<ST>>("MixST")       // This must be the C++ class name.
+  using GE = ST<Normal>;
+  Rcpp::class_<MixE<GE>>("MixSTNormal")       // This must be the C++ class name.
   .constructor()
-  .constructor<std::vector<double>>()
-  .constructor<std::vector<double>, std::vector<double>>()
-  .method("print", &MixE<ST>::print)
-  .method("getLogMixedValue", &MixE<ST>::getLogMixedValue)
+  .constructor<std::vector<double>, std::vector<double>, std::vector<double>, double, double>()
+  .method("print", &MixE<GE>::print)
+  .method("getLogMixedValue", &MixE<GE>::getLogMixedValue)
   ;
 }

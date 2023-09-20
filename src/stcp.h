@@ -11,52 +11,82 @@ namespace stcp
 {
 constexpr double kEps{1e-8};
 
-// Implementation of E-value / detector
-class SingleE
+// Implementation of Baseline increment
+class BaselineIncrement
 {
 public:
-  SingleE();
-  SingleE(const double log_value);
+  BaselineIncrement()
+    : m_lambda{0}, m_s_param{0}, m_v_param{1}
+    {
+    }
+  BaselineIncrement(const double lambda, const double s_param, const double v_param)
+    : m_lambda{lambda}, m_s_param{s_param}, m_v_param{v_param}
+    {
+    }
   
-  virtual void updateLogValue(const double log_value) = 0;
-  double getLogValue() { return m_log_value; }
-  void setLogValue(const double log_value) { m_log_value = log_value; }
+  virtual double computeLogBaseValue(const double x) = 0;
+  virtual void reinitialize(const double lambda, const double s_param, const double v_param) = 0;
+  
+protected:
+  double m_lambda;
+  double m_s_param;
+  double m_v_param;
+};
+
+// Implementation of E-value / detector
+class ISingleE
+{
+public:
+  virtual double getLogValue() = 0;
+  virtual void reinitialize(const double log_value, const double lambda, const double s_param, const double v_param) = 0;
+  virtual void updateLogValue(const double x) = 0;
+  
+  virtual ~ISingleE() {}
+};
+
+template <typename L>
+class SingleE : public ISingleE
+{
+  static_assert(std::is_base_of<BaselineIncrement, L>::value, "Type must be derived from BaselineIncrement class.");
+  
+public:
+  SingleE()
+    : m_log_value{0.0}, m_base_obj{}
+    {
+    }
+  SingleE(const double log_value, const double lambda, const double s_param, const double v_param)
+    : m_log_value{log_value}, m_base_obj{lambda, s_param, v_param}
+    {
+    }
+  
+  double getLogValue() override { return m_log_value; }
+  void reinitialize(const double log_value, const double lambda, const double s_param, const double v_param) override
+  {
+    m_log_value = log_value;
+    m_base_obj.reinitialize(lambda, s_param, v_param);
+  }
+  
+  virtual void updateLogValue(const double x) = 0;
   
 protected:
   double m_log_value;
-};
-// Constructors
-inline SingleE::SingleE()
-  : m_log_value{0.0}
-  {
-  }
-inline SingleE::SingleE(const double log_value)
-  : m_log_value{log_value}
-  {
-  }
-
-class ST : public SingleE
-{
-public:
-  using SingleE::SingleE;
-  void updateLogValue(const double log_value) override
-  {
-    m_log_value += log_value;
-  }
+  L m_base_obj;
 };
 
 // Implementation of mixture of E-values / detectors
-template <typename T>
+template <typename E>
 class MixE
 {
-  static_assert(std::is_base_of<SingleE, T>::value, "Type must be derived from SingleE class.");
+  static_assert(std::is_base_of<ISingleE, E>::value, "Type must be derived from SingleE class.");
   
 public:
   MixE();
-  MixE(const double weight);
-  MixE(const double weight, const double log_value);
-  MixE(const std::vector<double> &weights);
-  MixE(const std::vector<double> &weights, const std::vector<double> &log_values);
+  MixE(const double log_value, const double lambda, const double s_param, const double v_param);
+  MixE(const std::vector<double> &weights,
+       const std::vector<double> &log_values,
+       const std::vector<double> &lambdas,
+       const double s_param,
+       const double v_param);
   
   std::vector<double> getWeights() { return m_weights; }
   std::vector<double> getLogWeights() { return m_log_weights; }
@@ -68,26 +98,23 @@ public:
 private:
   std::vector<double> m_weights;
   std::vector<double> m_log_weights;
-  std::vector<T> m_e_objs;
+  std::vector<E> m_e_objs;
   
   std::vector<double> validateAndComputeLogWeights(const std::vector<double> &weights);
 };
 
 // Constructors
-template <typename T>
-inline MixE<T>::MixE()
-  : m_weights{1.0}, m_log_weights{0.0}, m_e_objs{0.0}
+template <typename E>
+inline MixE<E>::MixE()
+  : m_weights{1.0}, m_log_weights{0.0}, m_e_objs(1)
   {
   }
-template <typename T>
-inline MixE<T>::MixE(const std::vector<double> &weights)
-  : m_weights{weights},
-    m_log_weights{validateAndComputeLogWeights(weights)},
-    m_e_objs(weights.size())
-    {
-    }
-template <typename T>
-inline MixE<T>::MixE(const std::vector<double> &weights, const std::vector<double> &log_values)
+template <typename E>
+inline MixE<E>::MixE(const std::vector<double> &weights,
+                     const std::vector<double> &log_values,
+                     const std::vector<double> &lambdas,
+                     const double s_param,
+                     const double v_param)
   : m_weights{weights},
     m_log_weights{validateAndComputeLogWeights(weights)},
     m_e_objs(log_values.size())
@@ -98,17 +125,19 @@ inline MixE<T>::MixE(const std::vector<double> &weights, const std::vector<doubl
       }
       for (std::size_t i = 0; i < log_values.size(); i++)
       {
-        m_e_objs[i].setLogValue(log_values[i]);
+        m_e_objs[i].reinitialize(log_values[i], lambdas[i], s_param, v_param);
       }
     }
-template <typename T>
-inline MixE<T>::MixE(const double weight) : MixE::MixE(std::vector<double>{weight}) {}
-template <typename T>
-inline MixE<T>::MixE(const double weight, const double log_value) : MixE::MixE(std::vector<double>{weight}, std::vector<double>{log_value}) {}
+template <typename E>
+inline MixE<E>::MixE(const double log_value, const double lambda, const double s_param, const double v_param)
+  : MixE<E>::MixE(std::vector<double>{1.0},
+    std::vector<double>{log_value},
+    std::vector<double>{lambda},
+    s_param, v_param) {}
 
 // Public members
-template <typename T>
-inline void MixE<T>::print()
+template <typename E>
+inline void MixE<E>::print()
 {
   std::cout << "weights: " << std::endl;
   for (auto w : m_weights)
@@ -124,8 +153,8 @@ inline void MixE<T>::print()
   std::cout << '\n';
 }
 
-template <typename T>
-inline std::vector<double> MixE<T>::getLogValues()
+template <typename E>
+inline std::vector<double> MixE<E>::getLogValues()
 {
   std::vector<double> log_values(m_e_objs.size());
   for (std::size_t i = 0; i < m_e_objs.size(); i++)
@@ -135,8 +164,8 @@ inline std::vector<double> MixE<T>::getLogValues()
   return log_values;
 }
 
-template <typename T>
-inline double MixE<T>::getLogMixedValue()
+template <typename E>
+inline double MixE<E>::getLogMixedValue()
 {
   if (m_e_objs.size() == 1)
   {
@@ -161,8 +190,8 @@ inline double MixE<T>::getLogMixedValue()
 }
 
 // Private members
-template <typename T>
-inline std::vector<double> MixE<T>::validateAndComputeLogWeights(const std::vector<double> &weights)
+template <typename E>
+inline std::vector<double> MixE<E>::validateAndComputeLogWeights(const std::vector<double> &weights)
 {
   double weights_sum{0.0};
   std::vector<double> log_weights;
@@ -183,6 +212,62 @@ inline std::vector<double> MixE<T>::validateAndComputeLogWeights(const std::vect
   
   return log_weights;
 }
+
+// Derived classes from BaselineIncrement
+
+// Normal baseline increment
+// s_param : mu0
+// v_param : sigma
+class Normal : public BaselineIncrement
+{
+public:
+  Normal()
+    : BaselineIncrement(), m_psi{0}, m_lambda_times_mu_plus_psi{0}
+    {
+    }
+  Normal(const double lambda, const double s_param, const double v_param)
+    : BaselineIncrement(lambda, s_param, v_param),
+      m_psi{compute_psi(lambda, v_param)},
+      m_lambda_times_mu_plus_psi{compute_lambda_times_mu_plus_psi(lambda, s_param, v_param)}
+      {
+      }
+  double computeLogBaseValue(const double x) override
+  {
+    return m_lambda * x - m_lambda_times_mu_plus_psi;
+  }
+  void reinitialize(const double lambda, const double s_param, const double v_param) override
+  {
+    m_lambda = lambda;
+    m_s_param = s_param;
+    m_v_param = v_param;
+    m_psi = compute_psi(lambda, v_param);
+    m_lambda_times_mu_plus_psi = compute_lambda_times_mu_plus_psi(lambda, s_param, v_param);
+  }
+  
+private:
+  double m_psi;
+  double m_lambda_times_mu_plus_psi;
+  double compute_psi(const double lambda, const double v_param)
+  {
+    return lambda * lambda * v_param * v_param * 0.5;
+  }
+  double compute_lambda_times_mu_plus_psi(const double lambda, const double s_param, const double v_param)
+  {
+    return lambda * s_param + compute_psi(lambda, v_param);
+  }
+};
+
+// Derived classes from SingleE
+template <typename L>
+class ST : public SingleE<L>
+{
+public:
+  using SingleE<L>::SingleE;
+  void updateLogValue(const double x) override
+  {
+    this->m_log_value += this->m_base_obj.computeLogBaseValue(x);
+  }
+};
 
 } // End of namespace stcp
 #endif
