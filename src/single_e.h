@@ -42,7 +42,7 @@ namespace stcp
             m_base_obj.reinitialize(lambda, s_param, v_param);
         }
 
-        virtual void updateLogValue(const double x) = 0;
+        virtual void updateLogValue(const double x) override = 0;
 
     protected:
         double m_log_value;
