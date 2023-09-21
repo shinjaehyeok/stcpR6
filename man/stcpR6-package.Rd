@@ -4,7 +4,19 @@
 \name{stcpR6-package}
 \alias{stcpR6}
 \alias{stcpR6-package}
-\title{stcpR6: What the Package Does in One 'Title Case' Line}
+\title{stcpR6: Sequential Test and Change-Point detection algorithms based on E-values / E-detectors}
 \description{
-One paragraph description of what the package does as one or more full sentences.
+An implementation of sequential tests and online change-point detection algorithms. This package supports APIs of nonparametric sequential test and online change-point detection for streams of univariate (sub-)Gaussian, binary, and bounded random variables. This package also provides APIs of general E-value based sequential test and E-detectors based change-point detection frameworks for advanced users.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/shinjaehyeok/stcpR6}
+  \item Report bugs at \url{https://github.com/shinjaehyeok/stcpR6/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Jaehyeok Shin \email{shinjaehyeok@gmail.com} (\href{https://orcid.org/0000-0003-0464-915X}{ORCID})
+
 }

@@ -1,2 +1,10 @@
-^.*\.Rproj$
+^stcpR6\.Rproj$
 ^\.Rproj\.user$
+^LICENSE\.md$
+^stcpR6\.Rcheck$
+^stcpR6.*\.tar\.gz$
+^stcpR6.*\.tgz$
+^README\.Rmd$
+^\.github$
+^doc$
+^Meta$

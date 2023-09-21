@@ -13,7 +13,6 @@ RCPP_MODULE(MixSTNormalEx) {
   Rcpp::class_<MixE<GE>>("MixSTNormal")       // This must be the C++ class name.
   .constructor()
   .constructor<std::vector<double>, std::vector<double>, std::vector<double>, double, double>()
-  .method("print", &MixE<GE>::print)
   .method("getLogMixedValue", &MixE<GE>::getLogMixedValue)
   ;
 }

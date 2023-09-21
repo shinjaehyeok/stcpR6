@@ -1,12 +1,30 @@
 Package: stcpR6
-Type: Package
-Title: What the Package Does in One 'Title Case' Line
-Version: 1.0
-Date: 2023-09-12
-Author: Your Name
-Maintainer: Your Name <your@email.com>
-Description: One paragraph description of what the package does as one or more full sentences.
-License: GPL (>= 2)
-Imports: methods, Rcpp (>= 1.0.11)
-LinkingTo: Rcpp
+Title: Sequential Test and Change-Point detection algorithms based on E-values / E-detectors
+Version: 0.0
+Authors@R: 
+    person(given = "Jaehyeok",
+           family = "Shin",
+           role = c("aut", "cre"),
+           email = "shinjaehyeok@gmail.com",
+           comment = c(ORCID = "0000-0003-0464-915X"))
+Description: An implementation of sequential tests and online change-point
+  detection algorithms. This package supports 
+  APIs of nonparametric sequential test and online change-point detection for 
+  streams of univariate (sub-)Gaussian, binary, and bounded random variables. 
+  This package also provides APIs of general E-value based sequential test and
+  E-detectors based change-point detection frameworks for advanced users. 
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+Imports:
+    methods, Rcpp (>= 1.0.11)
+LinkingTo: Rcpp
+Suggests: 
+    rmarkdown,
+    knitr,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+URL: https://github.com/shinjaehyeok/stcpR6
+BugReports: https://github.com/shinjaehyeok/stcpR6/issues
+VignetteBuilder: knitr
