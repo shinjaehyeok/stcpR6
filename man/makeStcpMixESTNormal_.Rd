@@ -6,7 +6,7 @@
 \usage{
 makeStcpMixESTNormal_(
   weights = 1,
-  lambdas = 0,
+  lambdas = 1,
   mu0 = 0,
   sig = 1,
   threshold = log(1/0.05)
