@@ -1,76 +1,66 @@
 #ifndef BASELINE_INCREMENT_H
 #define BASELINE_INCREMENT_H
 
-#include <iostream>
-#include <stdexcept>
-#include <vector>
-#include <cmath>
-#include <algorithm>
+#include "stcp_interface.h"
 
 namespace stcp
 {
-    // Implementation of Baseline increment
-    class BaselineIncrement
+    // Implementation of exponential baseline increment
+    class ExpBaselineIncrement : public IBaselineIncrement
     {
     public:
-        BaselineIncrement()
-            : m_lambda{0}, m_s_param{0}, m_v_param{1}
+        ExpBaselineIncrement()
+            : m_lambda{0.0}
         {
         }
-        BaselineIncrement(const double lambda, const double s_param, const double v_param)
-            : m_lambda{lambda}, m_s_param{s_param}, m_v_param{v_param}
+        ExpBaselineIncrement(const double lambda)
+            : m_lambda{lambda}
         {
         }
-
-        virtual double computeLogBaseValue(const double x) = 0;
-        virtual void reinitialize(const double lambda, const double s_param, const double v_param) = 0;
+        virtual double computeLogBaseValue(const double x) override = 0;
 
     protected:
-        double m_lambda;
-        double m_s_param;
-        double m_v_param;
+        double m_lambda{0};
     };
 
-    // Derived classes from BaselineIncrement
+    // Derived classes from ExpBaselineIncrement
     // Normal baseline increment
-    // s_param : mu0
-    // v_param : sigma
-    class Normal : public BaselineIncrement
+    class Normal : public ExpBaselineIncrement
     {
     public:
         Normal()
-            : BaselineIncrement(), m_psi{0}, m_lambda_times_mu_plus_psi{0}
+            : Normal::Normal(0.0, 0.0, 1.0)
         {
         }
-        Normal(const double lambda, const double s_param, const double v_param)
-            : BaselineIncrement(lambda, s_param, v_param),
-              m_psi{compute_psi(lambda, v_param)},
-              m_lambda_times_mu_plus_psi{compute_lambda_times_mu_plus_psi(lambda, s_param, v_param)}
+        Normal(const double lambda)
+            : Normal::Normal(lambda, 0.0, 1.0)
+        {
+        }
+        Normal(const double lambda, const double mu, const double sig)
+            : ExpBaselineIncrement{lambda},
+              m_mu{mu},
+              m_sig{sig},
+              m_psi{compute_psi(lambda, sig)},
+              m_lambda_times_mu_plus_psi{compute_lambda_times_mu_plus_psi(lambda, mu, sig)}
         {
         }
         double computeLogBaseValue(const double x) override
         {
             return m_lambda * x - m_lambda_times_mu_plus_psi;
         }
-        void reinitialize(const double lambda, const double s_param, const double v_param) override
-        {
-            m_lambda = lambda;
-            m_s_param = s_param;
-            m_v_param = v_param;
-            m_psi = compute_psi(lambda, v_param);
-            m_lambda_times_mu_plus_psi = compute_lambda_times_mu_plus_psi(lambda, s_param, v_param);
-        }
 
     private:
-        double m_psi;
-        double m_lambda_times_mu_plus_psi;
-        double compute_psi(const double lambda, const double v_param)
+        double m_mu{0.0};
+        double m_sig{1.0};
+        double m_psi{0.0};
+        double m_lambda_times_mu_plus_psi{0.0};
+        double compute_psi(const double lambda, const double sig)
         {
-            return lambda * lambda * v_param * v_param * 0.5;
+            return lambda * lambda * sig * sig * 0.5;
         }
-        double compute_lambda_times_mu_plus_psi(const double lambda, const double s_param, const double v_param)
+        double compute_lambda_times_mu_plus_psi(const double lambda, const double mu, const double sig)
         {
-            return lambda * s_param + compute_psi(lambda, v_param);
+            return lambda * mu + compute_psi(lambda, sig);
         }
     };
 } // End of namespace stcp

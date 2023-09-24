@@ -11,10 +11,10 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 
-RcppExport SEXP _rcpp_module_boot_MixSTNormalEx();
+RcppExport SEXP _rcpp_module_boot_StcpMixESTNormalEx();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rcpp_module_boot_MixSTNormalEx", (DL_FUNC) &_rcpp_module_boot_MixSTNormalEx, 0},
+    {"_rcpp_module_boot_StcpMixESTNormalEx", (DL_FUNC) &_rcpp_module_boot_StcpMixESTNormalEx, 0},
     {NULL, NULL, 0}
 };
 

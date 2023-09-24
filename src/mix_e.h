@@ -1,107 +1,66 @@
 #ifndef MIX_E_H
 #define MIX_E_H
 
-#include <iostream>
-#include <stdexcept>
-#include <vector>
-#include <cmath>
-#include <algorithm>
+#include "stcp_interface.h"
 
 namespace stcp
 {
-    constexpr double kEps{1e-8};
-
     // Implementation of mixture of E-values / detectors
     template <typename E>
-    class MixE
+    class MixE : public IGeneralE
     {
-        static_assert(std::is_base_of<ISingleE, E>::value, "Type must be derived from SingleE class.");
+        static_assert(std::is_base_of<IGeneralE, E>::value, "Type must be derived from IGeneralE class.");
 
     public:
         MixE();
-        MixE(const double log_value, const double lambda, const double s_param, const double v_param);
-        MixE(const std::vector<double> &weights,
-             const std::vector<double> &log_values,
-             const std::vector<double> &lambdas,
-             const double s_param,
-             const double v_param);
+        MixE(const E &e_obj);
+        MixE(const std::vector<E> &e_objs,
+             const std::vector<double> &weights);
+
+        double getLogValue() override;
+        void resetLogValue() override;
+        void updateLogValue(const double x) override;
 
         std::vector<double> getWeights() { return m_weights; }
-        std::vector<double> getLogWeights() { return m_log_weights; }
         std::vector<double> getLogValues();
 
         void print();
-        double getLogValue();
 
-    private:
+    protected:
+        std::vector<E> m_e_objs;
         std::vector<double> m_weights;
         std::vector<double> m_log_weights;
-        std::vector<E> m_e_objs;
-
         std::vector<double> validateAndComputeLogWeights(const std::vector<double> &weights);
     };
 
     // Constructors
     template <typename E>
     inline MixE<E>::MixE()
-        : m_weights{1.0}, m_log_weights{0.0}, m_e_objs(1)
+        : MixE<E>::MixE(std::vector<E>(1),
+                        std::vector<double>{1.0})
     {
     }
     template <typename E>
-    inline MixE<E>::MixE(const std::vector<double> &weights,
-                         const std::vector<double> &log_values,
-                         const std::vector<double> &lambdas,
-                         const double s_param,
-                         const double v_param)
-        : m_weights{weights},
-          m_log_weights{validateAndComputeLogWeights(weights)},
-          m_e_objs(log_values.size())
+    inline MixE<E>::MixE(const E &e_obj)
+        : MixE<E>::MixE(std::vector<E>{e_obj},
+                        std::vector<double>{1.0})
     {
-        if (weights.size() != log_values.size())
-        {
-            throw std::runtime_error("Weights and values do not have the same length.");
-        }
-        for (std::size_t i = 0; i < log_values.size(); i++)
-        {
-            m_e_objs[i].reinitialize(log_values[i], lambdas[i], s_param, v_param);
-        }
     }
     template <typename E>
-    inline MixE<E>::MixE(const double log_value, const double lambda, const double s_param, const double v_param)
-        : MixE<E>::MixE(std::vector<double>{1.0},
-                        std::vector<double>{log_value},
-                        std::vector<double>{lambda},
-                        s_param, v_param) {}
+    inline MixE<E>::MixE(const std::vector<E> &e_objs,
+                         const std::vector<double> &weights)
+        : m_e_objs{e_objs},
+          m_weights{weights},
+          m_log_weights{validateAndComputeLogWeights(weights)}
+
+    {
+        if (e_objs.size() != weights.size())
+        {
+            throw std::runtime_error("E objects and Weights do not have the same length.");
+        }
+    }
 
     // Public members
-    template <typename E>
-    inline void MixE<E>::print()
-    {
-        std::cout << "weights: " << std::endl;
-        for (auto w : m_weights)
-        {
-            std::cout << w << ' ';
-        }
-        std::cout << '\n';
-        std::cout << "log of values: " << std::endl;
-        for (auto v : m_e_objs)
-        {
-            std::cout << v.getLogValue() << ' ';
-        }
-        std::cout << '\n';
-    }
-
-    template <typename E>
-    inline std::vector<double> MixE<E>::getLogValues()
-    {
-        std::vector<double> log_values(m_e_objs.size());
-        for (std::size_t i = 0; i < m_e_objs.size(); i++)
-        {
-            log_values[i] = m_e_objs[i].getLogValue();
-        }
-        return log_values;
-    }
-
     template <typename E>
     inline double MixE<E>::getLogValue()
     {
@@ -127,6 +86,51 @@ namespace stcp
         return log(sum_exp) + max_log_wl;
     }
 
+    template <typename E>
+    inline void MixE<E>::resetLogValue()
+    {
+        for (auto &e_obj : m_e_objs)
+        {
+            e_obj.resetLogValue();
+        }
+    }
+
+    template <typename E>
+    inline void MixE<E>::updateLogValue(const double x)
+    {
+        for (auto &e_obj : m_e_objs)
+        {
+            e_obj.updateLogValue(x);
+        }
+    }
+
+    template <typename E>
+    inline std::vector<double> MixE<E>::getLogValues()
+    {
+        std::vector<double> log_values(m_e_objs.size());
+        for (std::size_t i = 0; i < m_e_objs.size(); i++)
+        {
+            log_values[i] = m_e_objs[i].getLogValue();
+        }
+        return log_values;
+    }
+
+    template <typename E>
+    inline void MixE<E>::print()
+    {
+        std::cout << "weights: " << std::endl;
+        for (auto &w : m_weights)
+        {
+            std::cout << w << ' ';
+        }
+        std::cout << '\n';
+        std::cout << "log of values: " << std::endl;
+        for (auto &e_obj : m_e_objs)
+        {
+            std::cout << e_obj.getLogValue() << ' ';
+        }
+        std::cout << '\n';
+    }
     // Private members
     template <typename E>
     inline std::vector<double> MixE<E>::validateAndComputeLogWeights(const std::vector<double> &weights)
