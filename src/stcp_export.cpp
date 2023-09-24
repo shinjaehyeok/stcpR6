@@ -61,4 +61,32 @@ RCPP_MODULE(StcpMixESRBerEx) {
                  std::vector<double>,
                  double>()
     ;
+  
+}
+
+RCPP_MODULE(StcpGLRCUBerEx) {
+  using namespace stcp;
+  using GE = GLRCU<BerGLR>;
+  
+  Rcpp::class_<Stcp<GE>>("StcpGLRCUBerBase")
+    .constructor()
+  
+  .method("getLogValue", &Stcp<GE>::getLogValue)
+  .method("getThreshold", &Stcp<GE>::getThreshold)
+  .method("isStopped", &Stcp<GE>::isStopped)
+  .method("getTime", &Stcp<GE>::getTime)
+  .method("getStoppedTime", &Stcp<GE>::getStoppedTime)
+  .method("reset", &Stcp<GE>::reset)
+  .method("updateLogValues", &Stcp<GE>::updateLogValues)
+  .method("updateLogValuesUntilStop", &Stcp<GE>::updateLogValuesUntilStop)
+  .method("updateAndReturnHistories", &Stcp<GE>::updateAndReturnHistories)
+  ;
+  
+  
+  Rcpp::class_<StcpBer<GE>>("StcpGLRCUBer")
+    .derives<Stcp<GE>>("StcpGLRCUBerBase")
+    .constructor()
+    .constructor<double, double, int>()
+    ;
+  
 }

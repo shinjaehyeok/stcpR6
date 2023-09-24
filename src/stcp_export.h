@@ -66,5 +66,24 @@ namespace stcp
             this->m_e_obj = MixE<E>(e_objs, weights);
         }
     };
+
+    template <>
+    class StcpBer<GLRCU<BerGLR>> : public Stcp<GLRCU<BerGLR>>
+    {
+    public:
+        StcpBer<GLRCU<BerGLR>>()
+            : Stcp<GLRCU<BerGLR>>::Stcp()
+        {
+        }
+        StcpBer<GLRCU<BerGLR>>(
+            const double threshold,
+            const double p,
+            const int window_size)
+            : Stcp<GLRCU<BerGLR>>::Stcp()
+        {
+            this->m_threshold = threshold;
+            this->m_e_obj = GLRCU<BerGLR>(BerGLR(p), window_size);
+        }
+    };
 } // End of namespace stcp
 #endif

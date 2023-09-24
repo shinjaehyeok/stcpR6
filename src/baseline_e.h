@@ -77,6 +77,5 @@ namespace stcp
                 std::max(0.0, this->m_log_value) + this->m_base_obj.computeLogBaseValue(x);
         }
     };
-
 } // End of namespace stcp
 #endif

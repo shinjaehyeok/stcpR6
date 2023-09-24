@@ -7,6 +7,7 @@
 #include <cmath>
 #include <limits>
 #include <algorithm>
+#include <deque>
 
 namespace stcp
 {
@@ -19,6 +20,16 @@ namespace stcp
         virtual double computeLogBaseValue(const double x) = 0;
 
         virtual ~IBaselineIncrement() {}
+    };
+
+    class ILogLRIncrement
+    {
+    public:
+        virtual double computeLogBaseValue(const double x) = 0;
+        virtual void updateH1MLE(double &h_1_mle, const double x, const int n) = 0;
+        virtual double computeMaxLLR(const double h_1_mle, const int n) = 0;
+        
+        virtual ~ILogLRIncrement() {}
     };
 
     class IGeneralE
@@ -34,10 +45,9 @@ namespace stcp
     class IStcp
     {
     public:
-
         virtual double getLogValue() = 0;
         virtual double getThreshold() = 0;
-        
+
         virtual bool isStopped() = 0;
         virtual int getTime() = 0;
         virtual int getStoppedTime() = 0;

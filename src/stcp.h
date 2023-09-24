@@ -3,6 +3,8 @@
 
 #include "stcp_interface.h"
 #include "baseline_increment.h"
+#include "log_lr_increment.h"
+#include "log_lr_e.h"
 #include "baseline_e.h"
 #include "mix_e.h"
 

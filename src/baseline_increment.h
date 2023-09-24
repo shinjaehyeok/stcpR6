@@ -37,12 +37,9 @@ namespace stcp
         {
         }
         Normal(const double lambda, const double mu, const double sig)
-            : ExpBaselineIncrement{lambda},
-              m_mu{mu},
-              m_sig{sig},
-              m_psi{compute_psi(lambda, sig)},
-              m_lambda_times_mu_plus_psi{compute_lambda_times_mu_plus_psi(lambda, mu, sig)}
+            : ExpBaselineIncrement{lambda}
         {
+            setupNormal(lambda, mu, sig);
         }
         double computeLogBaseValue(const double x) override
         {
@@ -62,6 +59,17 @@ namespace stcp
         {
             return lambda * mu + compute_psi(lambda, sig);
         }
+        void setupNormal(const double lambda, const double mu, const double sig)
+        {
+            if (sig <= 0)
+            {
+                throw std::runtime_error("sig must be strictly positive.");
+            }
+            m_mu = mu;
+            m_sig = sig;
+            m_psi = compute_psi(lambda, sig);
+            m_lambda_times_mu_plus_psi = compute_lambda_times_mu_plus_psi(lambda, mu, sig);
+        }
     };
 
     // Bernoulli baseline increment
@@ -77,11 +85,9 @@ namespace stcp
         {
         }
         Ber(const double lambda, const double p)
-            : ExpBaselineIncrement{lambda},
-              m_p{p},
-              m_log_base_val_x_one{lambda - compute_psi_uncentered(lambda, p)},
-              m_log_base_val_x_zero{-compute_psi_uncentered(lambda, p)}
+            : ExpBaselineIncrement{lambda}
         {
+            setupBer(lambda, p);
         }
         double computeLogBaseValue(const double x) override
         {
@@ -99,13 +105,27 @@ namespace stcp
             }
         }
 
-    private:
+    protected:
         double m_p{0.5};
         double m_log_base_val_x_one{0.0};
         double m_log_base_val_x_zero{0.0};
         double compute_psi_uncentered(const double lambda, const double p)
         {
             return log(1 - p + p * exp(lambda));
+        }
+        void check_prob_param_range(const double p)
+        {
+            if (p <= 0.0 || p >= 1.0)
+            {
+                throw std::runtime_error("Probability parameter must be strictly inbetween 0.0 and 1.0.");
+            }
+        }
+        void setupBer(const double lambda, const double p)
+        {
+            check_prob_param_range(p);
+            m_p = p,
+            m_log_base_val_x_one = lambda - compute_psi_uncentered(lambda, p);
+            m_log_base_val_x_zero = -compute_psi_uncentered(lambda, p);
         }
     };
 } // End of namespace stcp

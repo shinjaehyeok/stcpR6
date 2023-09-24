@@ -37,10 +37,31 @@ Rcpp::loadModule(module = "StcpMixESRBerEx", TRUE)
 #'
 #' @examples
 makeStcpMixESRBer_ <- function(threshold = log(1 / 0.05),
-                                  weights = 1,
-                                  lambdas = 1,
-                                  p = 0) {
+                               weights = 1,
+                               lambdas = 1,
+                               p = 0) {
   return(StcpMixESRBer$new(threshold, weights,
-                              lambdas,
-                              p))
+                           lambdas,
+                           p))
+}
+
+
+Rcpp::loadModule(module = "StcpGLRCUBerEx", TRUE)
+
+#' Initialize an object of StcpGLRCUBer class
+#'
+#' @param threshold stopping threshold
+#' @param p mean of H0
+#' @param window_size Window size for GLR computation.
+#'
+#' @return An object of StcpGLRCUBer class
+#' @export
+#'
+#' @examples
+makeStcpGLRCUBer_ <- function(threshold = log(1 / 0.05),
+                              p = 0,
+                              window_size = 100L) {
+  return(StcpGLRCUBer$new(threshold,
+                          p,
+                          window_size))
 }
