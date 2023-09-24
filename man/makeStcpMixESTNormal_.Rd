@@ -5,14 +5,16 @@
 \title{Initialize an object of StcpMixSTNormal class}
 \usage{
 makeStcpMixESTNormal_(
+  threshold = log(1/0.05),
   weights = 1,
   lambdas = 1,
   mu0 = 0,
-  sig = 1,
-  threshold = log(1/0.05)
+  sig = 1
 )
 }
 \arguments{
+\item{threshold}{stopping threshold}
+
 \item{weights}{Vector of weights}
 
 \item{lambdas}{Vector of lambdas}
@@ -20,8 +22,6 @@ makeStcpMixESTNormal_(
 \item{mu0}{mean of H0}
 
 \item{sig}{sigma}
-
-\item{threshold}{stopping threshold}
 }
 \value{
 An object of StcpMixSTNormal class

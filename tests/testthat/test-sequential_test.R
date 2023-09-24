@@ -29,9 +29,10 @@ test_that("Sequentail test for Normal - 1. Simple", {
 
 test_that("Sequentail test for Normal - 2. Mixture", {
   # Initialization
+  alpha <- 0.05
   weights <- c(0.3, 0.7)
   lambdas <- c(1, 2)
-  stcp <- makeStcpMixESTNormal_(weights, lambdas)
+  stcp <- makeStcpMixESTNormal_(log(1/alpha), weights, lambdas)
   
   obs <- c(1.0, 3.0, 2.0)
   expected_increment1 <- lambdas[1] * obs - lambdas[1]^2 / 2

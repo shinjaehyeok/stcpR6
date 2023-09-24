@@ -2,25 +2,45 @@ Rcpp::loadModule(module = "StcpMixESTNormalEx", TRUE)
 
 #' Initialize an object of StcpMixSTNormal class
 #'
+#' @param threshold stopping threshold
 #' @param weights Vector of weights
 #' @param lambdas Vector of lambdas
 #' @param mu0 mean of H0
 #' @param sig sigma
-#' @param threshold stopping threshold
 #'
 #' @return An object of StcpMixSTNormal class
 #' @export
 #'
 #' @examples
-makeStcpMixESTNormal_ <- function(weights = 1,
+makeStcpMixESTNormal_ <- function(threshold = log(1 / 0.05),
+                                  weights = 1,
                                   lambdas = 1,
                                   mu0 = 0,
-                                  sig = 1,
-                                  threshold = log(1 / 0.05)) {
-  
-  return(StcpMixESTNormal$new(weights,
+                                  sig = 1) {
+  return(StcpMixESTNormal$new(threshold, weights,
                               lambdas,
                               mu0,
-                              sig,
-                              threshold))
+                              sig))
+}
+
+Rcpp::loadModule(module = "StcpMixESRBerEx", TRUE)
+
+#' Initialize an object of StcpMixSRBer class
+#'
+#' @param threshold stopping threshold
+#' @param weights Vector of weights
+#' @param lambdas Vector of lambdas
+#' @param p mean of H0
+#'
+#' @return An object of StcpMixSRBer class
+#' @export
+#'
+#' @examples
+makeStcpMixESRBer_ <- function(threshold = log(1 / 0.05),
+                                  weights = 1,
+                                  lambdas = 1,
+                                  p = 0) {
+  return(StcpMixESRBer$new(threshold, weights,
+                              lambdas,
+                              p))
 }
