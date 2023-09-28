@@ -1,3 +1,24 @@
+/*
+ Copyright (c) 2023 Jaehyeok Shin
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy of
+ this software and associated documentation files (the "Software"), to deal in
+ the Software without restriction, including without limitation the rights to
+ use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ the Software, and to permit persons to whom the Software is furnished to do so,
+ subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 #ifndef LOG_LR_INCREMENT_H
 #define LOG_LR_INCREMENT_H
 
@@ -6,6 +27,92 @@
 namespace stcp
 {
     // Implementation of log likelihood ratio baseline increment
+    // Normal
+    class NormalLR : public ILogLRIncrement
+    {
+    public:
+        NormalLR() {}
+        NormalLR(const double mu1)
+            : NormalLR::NormalLR(mu1, 0.0, 1.0)
+        {
+        }
+        NormalLR(const double mu1, const double mu, const double sig)
+            : NormalLR::NormalLR()
+        {
+            setupNormalLR(mu1, mu, sig);
+        }
+        double computeLogBaseValue(const double x) override
+        {
+            return m_mu_delta_by_sig_squared * (x - m_mu1_plus_mu_by_two);
+        }
+        void updateH1MLE(double &h_1_mle, const double x, const int n) override
+        {
+            // n: sample size *after" taking account for new observation x
+            h_1_mle = (h_1_mle * (n - 1) + x) / n;
+        }
+        double computeMaxLLR(const double h_1_mle, const int n) override
+        {
+            return n * ((h_1_mle - m_mu) / m_sig) * ((h_1_mle - m_mu) / m_sig) / 2.0;
+        }
+
+    protected:
+        double m_mu{0.0};
+        double m_sig{1.0};
+        double m_mu_delta_by_sig_squared{0.0};
+        double m_mu1_plus_mu_by_two{0.0};
+        void setupNormalLR(const double mu1, const double mu, const double sig)
+        {
+            if (sig <= 0)
+            {
+                throw std::runtime_error("sig must be strictly positive.");
+            }
+            m_mu = mu;
+            m_sig = sig;
+            m_mu_delta_by_sig_squared = (mu1 - mu) / sig / sig;
+            m_mu1_plus_mu_by_two = (mu1 + mu) / 2.0;
+        }
+    };
+    class NormalGLR : public NormalLR
+    {
+    public:
+        NormalGLR()
+            : NormalLR::NormalLR(0.0, 0.0, 1.0)
+        {
+        }
+        NormalGLR(const double mu)
+            : NormalLR::NormalLR(mu, mu, 1.0)
+        {
+        }
+        NormalGLR(const double mu, const double sig)
+            : NormalLR::NormalLR(mu, mu, sig)
+        {
+        }
+    };
+
+    class NormalGLRGreater : public NormalGLR
+    {
+    public:
+        using NormalGLR::NormalGLR;
+
+        double computeMaxLLR(const double h_1_mle, const int n) override
+        {
+            double h_1_mle_gt{std::max(h_1_mle, m_mu)};
+            return n * ((h_1_mle_gt - m_mu) / m_sig) * ((h_1_mle_gt - m_mu) / m_sig) / 2.0;
+        }
+    };
+
+    class NormalGLRLess : public NormalGLR
+    {
+    public:
+        using NormalGLR::NormalGLR;
+
+        double computeMaxLLR(const double h_1_mle, const int n) override
+        {
+            double h_1_mle_ls{std::min(h_1_mle, m_mu)};
+            return n * ((h_1_mle_ls - m_mu) / m_sig) * ((h_1_mle_ls - m_mu) / m_sig) / 2.0;
+        }
+    };
+
     // Bernoulli
     class BerLR : public ILogLRIncrement
     {
@@ -42,16 +149,7 @@ namespace stcp
         }
         double computeMaxLLR(const double h_1_mle, const int n) override
         {
-            if (abs(h_1_mle) < kEps)
-            {
-                return n * (1 - h_1_mle) * log((1 - h_1_mle) / (1 - this->m_p));
-            }
-            else if (abs(h_1_mle - 1.0) < kEps)
-            {
-                return n * h_1_mle * log(h_1_mle / this->m_p);
-            }
-            return n * (h_1_mle * log(h_1_mle / this->m_p) +
-                        (1 - h_1_mle) * log((1 - h_1_mle) / (1 - this->m_p)));
+            return computeMaxLLRBer(m_p, h_1_mle, n);
         }
 
     protected:
@@ -75,7 +173,23 @@ namespace stcp
             m_log_base_val_x_one = log(q / p);
             m_log_base_val_x_zero = log((1 - q) / (1 - p));
         }
+        double computeMaxLLRBer(const double p, const double x_bar, const int n);
     };
+
+    inline double BerLR::computeMaxLLRBer(const double p, const double x_bar, const int n)
+    {
+        if (abs(x_bar) < kEps)
+        {
+            return n * (1 - x_bar) * log((1 - x_bar) / (1 - p));
+        }
+        else if (abs(x_bar - 1.0) < kEps)
+        {
+            return n * x_bar * log(x_bar / p);
+        }
+        return n * (x_bar * log(x_bar / p) +
+                    (1 - x_bar) * log((1 - x_bar) / (1 - p)));
+    }
+
     class BerGLR : public BerLR
     {
     public:
@@ -88,5 +202,28 @@ namespace stcp
         {
         }
     };
+
+    class BerGLRGreater : public BerGLR
+    {
+    public:
+        using BerGLR::BerGLR;
+
+        double computeMaxLLR(const double h_1_mle, const int n) override
+        {
+            return computeMaxLLRBer(this->m_p, std::max(h_1_mle, this->m_p), n);
+        }
+    };
+
+    class BerGLRLess : public BerGLR
+    {
+    public:
+        using BerGLR::BerGLR;
+
+        double computeMaxLLR(const double h_1_mle, const int n) override
+        {
+            return computeMaxLLRBer(this->m_p, std::min(h_1_mle, this->m_p), n);
+        }
+    };
+
 } // End of namespace stcp
 #endif
