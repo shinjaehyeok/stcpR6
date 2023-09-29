@@ -21,7 +21,11 @@ RcppExport SEXP _rcpp_module_boot_StcpMixESTBoundedrEx();
 RcppExport SEXP _rcpp_module_boot_StcpMixESRBoundedrEx();
 RcppExport SEXP _rcpp_module_boot_StcpMixECUBoundedrEx();
 RcppExport SEXP _rcpp_module_boot_GLRCUNormalEx();
+RcppExport SEXP _rcpp_module_boot_GLRCUNormalGreaterEx();
+RcppExport SEXP _rcpp_module_boot_GLRCUNormalLessEx();
 RcppExport SEXP _rcpp_module_boot_GLRCUBerEx();
+RcppExport SEXP _rcpp_module_boot_GLRCUBerGreaterEx();
+RcppExport SEXP _rcpp_module_boot_GLRCUBerLessEx();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rcpp_module_boot_StcpMixESTNormalEx", (DL_FUNC) &_rcpp_module_boot_StcpMixESTNormalEx, 0},
@@ -34,7 +38,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rcpp_module_boot_StcpMixESRBoundedrEx", (DL_FUNC) &_rcpp_module_boot_StcpMixESRBoundedrEx, 0},
     {"_rcpp_module_boot_StcpMixECUBoundedrEx", (DL_FUNC) &_rcpp_module_boot_StcpMixECUBoundedrEx, 0},
     {"_rcpp_module_boot_GLRCUNormalEx", (DL_FUNC) &_rcpp_module_boot_GLRCUNormalEx, 0},
+    {"_rcpp_module_boot_GLRCUNormalGreaterEx", (DL_FUNC) &_rcpp_module_boot_GLRCUNormalGreaterEx, 0},
+    {"_rcpp_module_boot_GLRCUNormalLessEx", (DL_FUNC) &_rcpp_module_boot_GLRCUNormalLessEx, 0},
     {"_rcpp_module_boot_GLRCUBerEx", (DL_FUNC) &_rcpp_module_boot_GLRCUBerEx, 0},
+    {"_rcpp_module_boot_GLRCUBerGreaterEx", (DL_FUNC) &_rcpp_module_boot_GLRCUBerGreaterEx, 0},
+    {"_rcpp_module_boot_GLRCUBerLessEx", (DL_FUNC) &_rcpp_module_boot_GLRCUBerLessEx, 0},
     {NULL, NULL, 0}
 };
 

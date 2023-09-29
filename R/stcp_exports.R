@@ -11,56 +11,14 @@ Rcpp::loadModule(module = "StcpMixESTBoundedrEx", TRUE)
 Rcpp::loadModule(module = "StcpMixESRBoundedrEx", TRUE)
 Rcpp::loadModule(module = "StcpMixECUBoundedrEx", TRUE)
 
-# Modules from stcp_glr_export.cpp
+# Modules from stcp_glrcu_export.cpp
 Rcpp::loadModule(module = "GLRCUNormalEx", TRUE)
+Rcpp::loadModule(module = "GLRCUNormalGreaterEx", TRUE)
+Rcpp::loadModule(module = "GLRCUNormalLessEx", TRUE)
+
 Rcpp::loadModule(module = "GLRCUBerEx", TRUE)
-
-#' R6 Class representing a person
-#'
-#' A person has a name and a hair color.
-#' @importFrom R6 R6Class
-Stcp <- R6::R6Class("Stcp",
-                      public = list(
-                        #' @field name First or full name of the person.
-                        name = NULL,
-                        
-                        #' @field hair Hair color of the person.
-                        hair = NULL,
-                        
-                        #' @description
-                        #' Create a new person object.
-                        #' @param name Name.
-                        #' @param hair Hair color.
-                        #' @return A new `Person` object.
-                        initialize = function(name = NA, hair = NA) {
-                          self$name <- name
-                          self$hair <- hair
-                          self$greet()
-                          private$stcpCpp <- NULL
-                        },
-                        
-                        #' @description
-                        #' Change hair color.
-                        #' @param val New hair color.
-                        set_hair = function(val) {
-                          self$hair <- val
-                        },
-                        
-                        #' @description
-                        #' Say hi.
-                        greet = function() {
-                          cat(paste0("Hello, my name is ", self$name, ".\n"))
-                        }
-                      ),
-                      private = list(
-                        stcpCpp = NULL
-                      )
-)
-
-# StcpNormal
-# StcpBer
-# StcpBounded
-
+Rcpp::loadModule(module = "GLRCUBerGreaterEx", TRUE)
+Rcpp::loadModule(module = "GLRCUBerLessEx", TRUE)
 
 #' Initialize an object of StcpMixSTNormal class
 #'
@@ -121,9 +79,9 @@ makeStcpMixESRBer_ <- function(threshold = log(1 / 0.05),
 #'
 #' @examples
 makeGLRCUBer_ <- function(threshold = log(1 / 0.05),
-                              p = 0,
-                              window_size = 100L) {
+                          p = 0,
+                          window_size = 100L) {
   return(GLRCUBer$new(threshold,
-                          p,
-                          window_size))
+                      p,
+                      window_size))
 }
