@@ -15,12 +15,14 @@ test_that("Sub-G psi functions", {
   # Inverse function
   mu_vec <- seq(0, 10, by = 0.1)
   psi_star_vec <- sapply(mu_vec, psi_fn_list$psi_star)
-  psi_inv_from_star <- sapply(psi_star_vec, psi_fn_list$psi_star_inv)
+  psi_inv_from_star <-
+    sapply(psi_star_vec, psi_fn_list$psi_star_inv)
   expect_equal(sum(abs(mu_vec - psi_inv_from_star) > 1e-6), 0)
   
   lambda_vec <- seq(0, 10, by = 0.1)
-  psi_star_inv_vec <- sapply(lambda_vec, psi_fn_list$psi_star_inv)  
-  psi_star_from_inv <- sapply(psi_star_inv_vec, psi_fn_list$psi_star)
+  psi_star_inv_vec <- sapply(lambda_vec, psi_fn_list$psi_star_inv)
+  psi_star_from_inv <-
+    sapply(psi_star_inv_vec, psi_fn_list$psi_star)
   expect_equal(sum(abs(lambda_vec - psi_star_from_inv) > 1e-6), 0)
 })
 
@@ -35,19 +37,21 @@ test_that("Sub-B psi functions", {
   expect_equal(psi_fn_list$psi_star_inv(0), 0)
   
   # Derivatives always positive except at zero
-  y_vec <- seq(0.1, 1-m_pre, by = 0.01)
+  y_vec <- seq(0.1, 1 - m_pre, by = 0.01)
   div_vec <- sapply(y_vec, psi_fn_list$psi_star_div)
   expect_equal(sum(div_vec > 0), length(y_vec))
   
   # Inverse function
-  mu_vec <- seq(0, 1-m_pre, by = 0.01)
+  mu_vec <- seq(0, 1 - m_pre, by = 0.01)
   psi_star_vec <- sapply(mu_vec, psi_fn_list$psi_star)
-  psi_inv_from_star <- sapply(psi_star_vec, psi_fn_list$psi_star_inv)
+  psi_inv_from_star <-
+    sapply(psi_star_vec, psi_fn_list$psi_star_inv)
   expect_equal(sum(abs(mu_vec - psi_inv_from_star) > 1e-6), 0)
-
-  lambda_vec <- seq(0, log(1/m_pre), by = 0.01)
+  
+  lambda_vec <- seq(0, log(1 / m_pre), by = 0.01)
   psi_star_inv_vec <- sapply(lambda_vec, psi_fn_list$psi_star_inv)
-  psi_star_from_inv <- sapply(psi_star_inv_vec, psi_fn_list$psi_star)
+  psi_star_from_inv <-
+    sapply(psi_star_inv_vec, psi_fn_list$psi_star)
   expect_equal(sum(abs(lambda_vec - psi_star_from_inv) > 1e-6), 0)
 })
 
@@ -68,11 +72,13 @@ test_that("Sub-E psi functions", {
   # Inverse function
   mu_vec <- seq(0, 10, by = 0.1)
   psi_star_vec <- sapply(mu_vec, psi_fn_list$psi_star)
-  psi_inv_from_star <- sapply(psi_star_vec, psi_fn_list$psi_star_inv)
+  psi_inv_from_star <-
+    sapply(psi_star_vec, psi_fn_list$psi_star_inv)
   expect_equal(sum(abs(mu_vec - psi_inv_from_star) > 1e-6), 0)
   
   lambda_vec <- seq(0, 10, by = 0.1)
-  psi_star_inv_vec <- sapply(lambda_vec, psi_fn_list$psi_star_inv)  
-  psi_star_from_inv <- sapply(psi_star_inv_vec, psi_fn_list$psi_star)
+  psi_star_inv_vec <- sapply(lambda_vec, psi_fn_list$psi_star_inv)
+  psi_star_from_inv <-
+    sapply(psi_star_inv_vec, psi_fn_list$psi_star)
   expect_equal(sum(abs(lambda_vec - psi_star_from_inv) > 1e-6), 0)
 })

@@ -12,8 +12,18 @@ and bounded random variables.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-Stcp-new}{\code{Stcp$new()}}
-\item \href{#method-Stcp-greet}{\code{Stcp$greet()}}
-\item \href{#method-Stcp-clone}{\code{Stcp$clone()}}
+\item \href{#method-Stcp-print}{\code{Stcp$print()}}
+\item \href{#method-Stcp-getWeights}{\code{Stcp$getWeights()}}
+\item \href{#method-Stcp-getLambdas}{\code{Stcp$getLambdas()}}
+\item \href{#method-Stcp-getLogValue}{\code{Stcp$getLogValue()}}
+\item \href{#method-Stcp-getThreshold}{\code{Stcp$getThreshold()}}
+\item \href{#method-Stcp-isStopped}{\code{Stcp$isStopped()}}
+\item \href{#method-Stcp-getTime}{\code{Stcp$getTime()}}
+\item \href{#method-Stcp-getStoppedTime}{\code{Stcp$getStoppedTime()}}
+\item \href{#method-Stcp-reset}{\code{Stcp$reset()}}
+\item \href{#method-Stcp-updateLogValues}{\code{Stcp$updateLogValues()}}
+\item \href{#method-Stcp-updateLogValuesUntilStop}{\code{Stcp$updateLogValuesUntilStop()}}
+\item \href{#method-Stcp-updateAndReturnHistories}{\code{Stcp$updateAndReturnHistories()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -30,6 +40,8 @@ Create a new Stcp object.
   m_pre = 0,
   delta_lower = 0.1,
   delta_upper = NULL,
+  weights = NULL,
+  lambdas = NULL,
   k_max = 1000
 )}\if{html}{\out{</div>}}
 }
@@ -74,7 +86,12 @@ Currently, GLRCU does not support the minimum gap, and this param will be ignore
 alternative / post-change one. It must be strictly positive for ST, SR and CU.
 Currently, GLRCU does not support the maximum gap, and this param will be ignored.}
 
-\item{\code{k_max}}{Positive integer to determine the maximum number of baselines.}
+\item{\code{weights}}{If not null, the input weights will be used to initialize Stcp object.}
+
+\item{\code{lambdas}}{If not null, the input lambdas will be used to initialize Stcp object.}
+
+\item{\code{k_max}}{Positive integer to determine the maximum number of baselines.
+For GLRCU method, it is used as the lookup window size for GLRCU statistics.}
 }
 \if{html}{\out{</div>}}
 }
@@ -83,29 +100,112 @@ A new \code{Person} object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Stcp-greet"></a>}}
-\if{latex}{\out{\hypertarget{method-Stcp-greet}{}}}
-\subsection{Method \code{greet()}}{
+\if{html}{\out{<a id="method-Stcp-print"></a>}}
+\if{latex}{\out{\hypertarget{method-Stcp-print}{}}}
+\subsection{Method \code{print()}}{
+Print summary of Stcp object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Stcp$greet()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Stcp$print()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Stcp-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-Stcp-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
+\if{html}{\out{<a id="method-Stcp-getWeights"></a>}}
+\if{latex}{\out{\hypertarget{method-Stcp-getWeights}{}}}
+\subsection{Method \code{getWeights()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Stcp$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Stcp$getWeights()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
 }
-\if{html}{\out{</div>}}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Stcp-getLambdas"></a>}}
+\if{latex}{\out{\hypertarget{method-Stcp-getLambdas}{}}}
+\subsection{Method \code{getLambdas()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Stcp$getLambdas()}\if{html}{\out{</div>}}
 }
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Stcp-getLogValue"></a>}}
+\if{latex}{\out{\hypertarget{method-Stcp-getLogValue}{}}}
+\subsection{Method \code{getLogValue()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Stcp$getLogValue()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Stcp-getThreshold"></a>}}
+\if{latex}{\out{\hypertarget{method-Stcp-getThreshold}{}}}
+\subsection{Method \code{getThreshold()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Stcp$getThreshold()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Stcp-isStopped"></a>}}
+\if{latex}{\out{\hypertarget{method-Stcp-isStopped}{}}}
+\subsection{Method \code{isStopped()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Stcp$isStopped()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Stcp-getTime"></a>}}
+\if{latex}{\out{\hypertarget{method-Stcp-getTime}{}}}
+\subsection{Method \code{getTime()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Stcp$getTime()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Stcp-getStoppedTime"></a>}}
+\if{latex}{\out{\hypertarget{method-Stcp-getStoppedTime}{}}}
+\subsection{Method \code{getStoppedTime()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Stcp$getStoppedTime()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Stcp-reset"></a>}}
+\if{latex}{\out{\hypertarget{method-Stcp-reset}{}}}
+\subsection{Method \code{reset()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Stcp$reset()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Stcp-updateLogValues"></a>}}
+\if{latex}{\out{\hypertarget{method-Stcp-updateLogValues}{}}}
+\subsection{Method \code{updateLogValues()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Stcp$updateLogValues(xs)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Stcp-updateLogValuesUntilStop"></a>}}
+\if{latex}{\out{\hypertarget{method-Stcp-updateLogValuesUntilStop}{}}}
+\subsection{Method \code{updateLogValuesUntilStop()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Stcp$updateLogValuesUntilStop(xs)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Stcp-updateAndReturnHistories"></a>}}
+\if{latex}{\out{\hypertarget{method-Stcp-updateAndReturnHistories}{}}}
+\subsection{Method \code{updateAndReturnHistories()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Stcp$updateAndReturnHistories(xs)}\if{html}{\out{</div>}}
+}
+
 }
 }

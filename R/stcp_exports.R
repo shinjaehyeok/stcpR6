@@ -29,7 +29,6 @@ Rcpp::loadModule(module = "GLRCUBerLessEx", TRUE)
 #' @param sig sigma
 #'
 #' @return An object of StcpMixSTNormal class
-#' @export
 #'
 #' @examples
 makeStcpMixESTNormal_ <- function(threshold = log(1 / 0.05),
@@ -53,7 +52,6 @@ makeStcpMixESTNormal_ <- function(threshold = log(1 / 0.05),
 #' @param p mean of H0
 #'
 #' @return An object of StcpMixSRBer class
-#' @export
 #'
 #' @examples
 makeStcpMixESRBer_ <- function(threshold = log(1 / 0.05),
@@ -75,7 +73,6 @@ makeStcpMixESRBer_ <- function(threshold = log(1 / 0.05),
 #' @param window_size Window size for GLR computation.
 #'
 #' @return An object of StcpGLRCUBer class
-#' @export
 #'
 #' @examples
 makeGLRCUBer_ <- function(threshold = log(1 / 0.05),
