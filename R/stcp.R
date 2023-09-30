@@ -71,9 +71,11 @@ Stcp <- R6::R6Class(
       }
       
       if (family == "Normal") {
-        psi_fn_list <- generate_sub_G_fn(1)
-      } else if (family == "Ber") {
+        psi_fn_list_greater <- generate_sub_G_fn(1)
+        psi_fn_list_less <- generate_sub_G_fn(1)
+        } else if (family == "Ber") {
         psi_fn_list <- generate_sub_B_fn(m_pre)
+        psi_fn_list_less <- generate_sub_B_fn(1-m_pre)
         if (alternative != "less") {
           if (m_pre + delta_lower > 1) {
             stop("The minimum of alternative / post-change parameter (m_pre + delta_lower) is greater than 1.")
@@ -138,15 +140,29 @@ Stcp <- R6::R6Class(
       }
       
       # Compute baseline parameters
-      # TODO make two-sided and less version
-      base_param <- compute_baseline(
-        alpha,
-        delta_lower_internal,
-        delta_upper_internal,
-        psi_fn_list,
-        v_min,
-        k_max
-      )
+      if (alternative == "greater") {
+        base_param <- compute_baseline(
+          alpha,
+          delta_lower_internal,
+          delta_upper_internal,
+          psi_fn_list,
+          v_min,
+          k_max
+        )
+        weights <- base_param$omega
+        lambda <- base_param$lambda
+      } else if (alternative == "less") {
+        base_param <- compute_baseline(
+          alpha,
+          delta_lower_internal,
+          delta_upper_internal,
+          psi_fn_list,
+          v_min,
+          k_max
+        )
+        weights <- base_param$omega
+        lambda <- base_param$lambda
+      }
       
       
       private$m_method <- method
