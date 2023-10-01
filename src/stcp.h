@@ -62,7 +62,7 @@ namespace stcp
             m_e_obj.resetLogValue();
             m_is_stopped = false;
             m_time = 0;
-            m_stopped_time = kIntInf;
+            m_stopped_time = 0;
         }
 
         void updateLogValue(const double x) override;
@@ -77,7 +77,7 @@ namespace stcp
         double m_threshold{log(1.0 / 0.05)}; // Default threshold ues alpha = 0.05.
         int m_time{0};
         bool m_is_stopped{false};
-        int m_stopped_time{kIntInf};
+        int m_stopped_time{0};
     };
 
     // Public members

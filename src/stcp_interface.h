@@ -33,7 +33,6 @@
 namespace stcp
 {
     constexpr double kEps{1e-12};
-    constexpr int kIntInf{std::numeric_limits<int>::infinity()};
     constexpr double kNegInf{-std::numeric_limits<double>::infinity()};
 
     class IBaselineIncrement
