@@ -158,11 +158,11 @@ Stcp <- R6::R6Class(
             delta_upper_ <- 5
           } else {
             if (alternative == "greater") {
-              delta_upper_ <- 1 - m_pre - 0.01
+              delta_upper_ <- 1 - m_pre - 0.001
             } else if (alternative == "less") {
-              delta_upper_ <- m_pre - 0.01
+              delta_upper_ <- m_pre - 0.001
             } else {
-              delta_upper_ <- min(1 - m_pre, m_pre) - 0.01
+              delta_upper_ <- min(1 - m_pre, m_pre) - 0.001
             }
           }
           
