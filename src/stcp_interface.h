@@ -59,7 +59,7 @@ namespace stcp
     {
     public:
         virtual double getLogValue() = 0;
-        virtual void resetLogValue() = 0;
+        virtual void reset() = 0;
         virtual void updateLogValue(const double x) = 0;
 
         virtual ~IGeneralE() {}

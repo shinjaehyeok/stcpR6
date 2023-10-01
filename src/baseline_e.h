@@ -46,7 +46,7 @@ namespace stcp
         }
 
         double getLogValue() override { return m_log_value; }
-        void resetLogValue() override { m_log_value = kNegInf; }
+        void reset() override { m_log_value = kNegInf; }
         virtual void updateLogValue(const double x) override = 0;
 
     protected:
@@ -70,7 +70,7 @@ namespace stcp
         {
             this->m_log_value = 0.0;
         }
-        void resetLogValue() override { this->m_log_value = 0.0; }
+        void reset() override { this->m_log_value = 0.0; }
         void updateLogValue(const double x) override
         {
             this->m_log_value += this->m_base_obj.computeLogBaseValue(x);

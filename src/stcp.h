@@ -59,7 +59,7 @@ namespace stcp
 
         void reset() override
         {
-            m_e_obj.resetLogValue();
+            m_e_obj.reset();
             m_is_stopped = false;
             m_time = 0;
             m_stopped_time = 0;
