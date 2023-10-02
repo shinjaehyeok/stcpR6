@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# stcp: Sequential Test and Change-Point detection algorithms based on E-values / E-detectors
+# stcpR6: Sequential Test and Change-Point detection algorithms based on E-values / E-detectors
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/shinjaehyeok/stcpR6/workflows/R-CMD-check/badge.svg)](https://github.com/shinjaehyeok/stcpR6/actions)
@@ -29,7 +29,7 @@ Disclaimer: This R package is a personal project and is not affiliated with my c
 
 ## Installation
 
-You can install the development version of stcp from [GitHub](https://github.com/) with:
+You can install the development version of stcpR6 from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")

@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# stcp: Sequential Test and Change-Point detection algorithms based on E-values / E-detectors
+# stcpR6: Sequential Test and Change-Point detection algorithms based on E-values / E-detectors
 
 <!-- badges: start -->
 
@@ -23,7 +23,7 @@ errors or omissions in this package.
 
 ## Installation
 
-You can install the development version of stcp from
+You can install the development version of stcpR6 from
 [GitHub](https://github.com/) with:
 
 ``` r
