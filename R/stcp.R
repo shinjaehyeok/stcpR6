@@ -121,16 +121,16 @@ Stcp <- R6::R6Class(
         # Check delta_lower is within boundary for Ber and Bounded cases
         if (family == "Ber") {
           if (alternative != "less") {
-            if (m_pre + delta_lower > 1) {
+            if (m_pre + delta_lower >= 1) {
               stop(
-                "The minimum of alternative / post-change parameter (m_pre + delta_lower) is greater than 1."
+                "The minimum of alternative / post-change parameter (m_pre + delta_lower) is greater than or equal to 1."
               )
             }
           }
           if (alternative != "greater") {
-            if (m_pre - delta_lower < 0) {
+            if (m_pre - delta_lower <= 0) {
               stop(
-                "The maximum of alternative / post-change parameter (m_pre - delta_lower) is less than 0."
+                "The maximum of alternative / post-change parameter (m_pre - delta_lower) is less than or equal to 0."
               )
             }
           }
@@ -176,13 +176,19 @@ Stcp <- R6::R6Class(
           # Bounded family uses sub-E class internally
           # So we convert it into the sub-E space.
           # where delta_E = m * delta / (sigma^2 + delta^2)
-          delta_lower_internal <-
+          delta_lower_internal_greater <-
             m_pre * delta_lower / (0.25 + delta_upper ^ 2)
-          delta_upper_internal <-
+          delta_upper_internal_greater <-
             m_pre * delta_upper / delta_lower ^ 2
+          delta_lower_internal_less <-
+            (1 - m_pre) * delta_lower / (0.25 + delta_upper ^ 2)
+          delta_upper_internal_less <-
+            (1 - m_pre) * delta_upper / delta_lower ^ 2
         } else {
-          delta_lower_internal <- delta_lower
-          delta_upper_internal <- delta_upper
+          delta_lower_internal_greater <- delta_lower
+          delta_upper_internal_greater <- delta_upper
+          delta_lower_internal_less <- delta_lower
+          delta_upper_internal_less <- delta_upper
         }
         
         
@@ -209,8 +215,8 @@ Stcp <- R6::R6Class(
         } else {
           if (alternative == "greater") {
             base_param <- compute_baseline(alpha,
-                                           delta_lower_internal,
-                                           delta_upper_internal,
+                                           delta_lower_internal_greater,
+                                           delta_upper_internal_greater,
                                            psi_fn_list,
                                            1,
                                            k_max)
@@ -219,8 +225,8 @@ Stcp <- R6::R6Class(
           } else if (alternative == "less") {
             base_param_less <- compute_baseline(
               alpha,
-              delta_lower_internal,
-              delta_upper_internal,
+              delta_lower_internal_less,
+              delta_upper_internal_less,
               psi_fn_list_less,
               1,
               k_max
@@ -233,15 +239,15 @@ Stcp <- R6::R6Class(
             }
           } else {
             base_param <- compute_baseline(alpha,
-                                           delta_lower_internal,
-                                           delta_upper_internal,
+                                           delta_lower_internal_greater,
+                                           delta_upper_internal_greater,
                                            psi_fn_list,
                                            1,
                                            k_max)
             base_param_less <- compute_baseline(
               alpha,
-              delta_lower_internal,
-              delta_upper_internal,
+              delta_lower_internal_less,
+              delta_upper_internal_less,
               psi_fn_list_less,
               1,
               k_max
@@ -249,10 +255,11 @@ Stcp <- R6::R6Class(
             weights <-
               c(base_param$omega / 2, base_param_less$omega / 2)
             if (family == "Normal" || family == "Ber") {
-              lambdas <- c(base_param$lambda, -base_param_less$lambda)
+              lambdas <- c(base_param$lambda,-base_param_less$lambda)
             } else if (family == "Bounded") {
               lambdas <-
-                c(base_param$lambda,-m_pre * base_param_less$lambda / (1 - m_pre))
+                c(base_param$lambda,
+                  -m_pre * base_param_less$lambda / (1 - m_pre))
             }
           }
           

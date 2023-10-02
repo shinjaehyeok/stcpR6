@@ -182,9 +182,9 @@ namespace stcp
         double m_mu{0.5};
         void setupBounded(const double lambda, const double mu)
         {
-            if (lambda >= 1.0 || lambda <= 0.0)
+            if (lambda >= 1.0 || lambda <= -1.0)
             {
-                throw std::runtime_error("Lambda must be strictly inbetween 0.0 and 1.0.");
+                throw std::runtime_error("Lambda must be strictly inbetween -1.0 and 1.0.");
             }
             if (mu <= 0.0)
             {

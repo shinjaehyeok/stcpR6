@@ -89,7 +89,7 @@ generate_sub_E_fn <- function(){
       -log(1-x) - x
     },
     psi_star = function(x){
-      val <- x - log(1+x)
+        val <- x - log(1+x)
       return(val)
     },
     psi_star_div = function(x){
