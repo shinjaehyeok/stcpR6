@@ -8,6 +8,62 @@ Stcp class supports a unified framework for sequential tests and change
 detection algorithms for streams of univariate (sub-)Gaussian, binary,
 and bounded random variables.
 }
+\examples{
+# Sequential Normal mean test H0: mu <= 0
+# Initialize stcp object for this test.
+stcp <- Stcp$new(method = "ST",
+                 family = "Normal",
+                 alternative = "greater",
+                 threshold = log(1 / 0.05),
+                 m_pre = 0)
+                 
+# Update the observations
+obs <- c(1.0, 3.0, 2.0)            
+stcp$updateLogValuesUntilStop(obs)
+
+# Check whether the sequential test is stopped
+stcp$isStopped() # TRUE
+
+# Check when the test was stopped
+stcp$getStoppedTime() # 3
+
+# Although the number of obervaions was 4, the test was stopped at 3.
+stcp$getTime() # 3
+
+# Get the log value of the mixutre of e-values at the current time (3)
+stcp$getLogValue() # 4.425555
+
+# ...which is higher than the threshold log(1 / 0.05) ~ 2.996
+stcp$getThreshold() # 2.995732
+
+# Reset the test object
+stcp$reset()
+
+# Rerun the test but, at this time, we track updated log values
+log_values <- stcp$updateAndReturnHistories(obs) 
+print(log_values) # 0.1159777 2.7002207 4.4255551 1.9746508
+
+# Again, the test was stopped at 3rd observation
+stcp$getStoppedTime() # 3
+
+# But, at this time, log values were evaluated until the 4th observation.
+stcp$getTime() # 4
+
+# Print overall summary
+stcp # or stcp$print() or print(stcp)
+# stcp Model:
+#   - Method:  ST 
+# - Family:  Normal 
+# - Alternative:  greater 
+# - Alpha:  0.05 
+# - m_pre:  0 
+# - Num. of mixing components:  55 
+# - Obs. have been passed:  4 
+# - Current log value:  1.974651 
+# - Is stopped before:  TRUE 
+# - Stopped time:  3 
+
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -113,6 +169,7 @@ Print summary of Stcp object.
 \if{html}{\out{<a id="method-Stcp-getWeights"></a>}}
 \if{latex}{\out{\hypertarget{method-Stcp-getWeights}{}}}
 \subsection{Method \code{getWeights()}}{
+Return weights of mixture of e-values / e-detectors.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Stcp$getWeights()}\if{html}{\out{</div>}}
 }
@@ -122,6 +179,7 @@ Print summary of Stcp object.
 \if{html}{\out{<a id="method-Stcp-getLambdas"></a>}}
 \if{latex}{\out{\hypertarget{method-Stcp-getLambdas}{}}}
 \subsection{Method \code{getLambdas()}}{
+Return lambda parameters of mixture of e-values / e-detectors.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Stcp$getLambdas()}\if{html}{\out{</div>}}
 }
@@ -131,6 +189,7 @@ Print summary of Stcp object.
 \if{html}{\out{<a id="method-Stcp-getLogValue"></a>}}
 \if{latex}{\out{\hypertarget{method-Stcp-getLogValue}{}}}
 \subsection{Method \code{getLogValue()}}{
+Return the log value of mixture of e-values / e-detectors.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Stcp$getLogValue()}\if{html}{\out{</div>}}
 }
@@ -140,6 +199,7 @@ Print summary of Stcp object.
 \if{html}{\out{<a id="method-Stcp-getThreshold"></a>}}
 \if{latex}{\out{\hypertarget{method-Stcp-getThreshold}{}}}
 \subsection{Method \code{getThreshold()}}{
+Return the threshold of the sequential test / change detection
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Stcp$getThreshold()}\if{html}{\out{</div>}}
 }
@@ -149,6 +209,7 @@ Print summary of Stcp object.
 \if{html}{\out{<a id="method-Stcp-isStopped"></a>}}
 \if{latex}{\out{\hypertarget{method-Stcp-isStopped}{}}}
 \subsection{Method \code{isStopped()}}{
+Return TRUE if the sequential test / change detection was stopped by crossing the threshold.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Stcp$isStopped()}\if{html}{\out{</div>}}
 }
@@ -158,6 +219,7 @@ Print summary of Stcp object.
 \if{html}{\out{<a id="method-Stcp-getTime"></a>}}
 \if{latex}{\out{\hypertarget{method-Stcp-getTime}{}}}
 \subsection{Method \code{getTime()}}{
+Return the number of observations having been passed.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Stcp$getTime()}\if{html}{\out{</div>}}
 }
@@ -167,6 +229,7 @@ Print summary of Stcp object.
 \if{html}{\out{<a id="method-Stcp-getStoppedTime"></a>}}
 \if{latex}{\out{\hypertarget{method-Stcp-getStoppedTime}{}}}
 \subsection{Method \code{getStoppedTime()}}{
+Return the stopped time. If it has been never stopped, return zero.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Stcp$getStoppedTime()}\if{html}{\out{</div>}}
 }
@@ -176,6 +239,7 @@ Print summary of Stcp object.
 \if{html}{\out{<a id="method-Stcp-reset"></a>}}
 \if{latex}{\out{\hypertarget{method-Stcp-reset}{}}}
 \subsection{Method \code{reset()}}{
+Reset the stcp object to the initial setup.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Stcp$reset()}\if{html}{\out{</div>}}
 }
@@ -185,27 +249,51 @@ Print summary of Stcp object.
 \if{html}{\out{<a id="method-Stcp-updateLogValues"></a>}}
 \if{latex}{\out{\hypertarget{method-Stcp-updateLogValues}{}}}
 \subsection{Method \code{updateLogValues()}}{
+Update the log value and related fields by passing a vector of observations.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Stcp$updateLogValues(xs)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{xs}}{A numeric vector of observations.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Stcp-updateLogValuesUntilStop"></a>}}
 \if{latex}{\out{\hypertarget{method-Stcp-updateLogValuesUntilStop}{}}}
 \subsection{Method \code{updateLogValuesUntilStop()}}{
+Update the log value and related fields until the log value is crossing the boundary.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Stcp$updateLogValuesUntilStop(xs)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{xs}}{A numeric vector of observations.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Stcp-updateAndReturnHistories"></a>}}
 \if{latex}{\out{\hypertarget{method-Stcp-updateAndReturnHistories}{}}}
 \subsection{Method \code{updateAndReturnHistories()}}{
+Update the log value and related fields then return updated log values by passing a vector of observations.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Stcp$updateAndReturnHistories(xs)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{xs}}{A numeric vector of observations.}
+}
+\if{html}{\out{</div>}}
+}
 }
 }

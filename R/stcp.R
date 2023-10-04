@@ -7,6 +7,62 @@
 #'
 #' @export
 #' @importFrom R6 R6Class
+#' 
+#' @examples
+#' # Sequential Normal mean test H0: mu <= 0
+#' # Initialize stcp object for this test.
+#' stcp <- Stcp$new(method = "ST",
+#'                  family = "Normal",
+#'                  alternative = "greater",
+#'                  threshold = log(1 / 0.05),
+#'                  m_pre = 0)
+#'                  
+#' # Update the observations
+#' obs <- c(1.0, 3.0, 2.0)            
+#' stcp$updateLogValuesUntilStop(obs)
+#' 
+#' # Check whether the sequential test is stopped
+#' stcp$isStopped() # TRUE
+#' 
+#' # Check when the test was stopped
+#' stcp$getStoppedTime() # 3
+#' 
+#' # Although the number of obervaions was 4, the test was stopped at 3.
+#' stcp$getTime() # 3
+#' 
+#' # Get the log value of the mixutre of e-values at the current time (3)
+#' stcp$getLogValue() # 4.425555
+#' 
+#' # ...which is higher than the threshold log(1 / 0.05) ~ 2.996
+#' stcp$getThreshold() # 2.995732
+#' 
+#' # Reset the test object
+#' stcp$reset()
+#' 
+#' # Rerun the test but, at this time, we track updated log values
+#' log_values <- stcp$updateAndReturnHistories(obs) 
+#' print(log_values) # 0.1159777 2.7002207 4.4255551 1.9746508
+#' 
+#' # Again, the test was stopped at 3rd observation
+#' stcp$getStoppedTime() # 3
+#' 
+#' # But, at this time, log values were evaluated until the 4th observation.
+#' stcp$getTime() # 4
+#' 
+#' # Print overall summary
+#' stcp # or stcp$print() or print(stcp)
+#' # stcp Model:
+#' #   - Method:  ST 
+#' # - Family:  Normal 
+#' # - Alternative:  greater 
+#' # - Alpha:  0.05 
+#' # - m_pre:  0 
+#' # - Num. of mixing components:  55 
+#' # - Obs. have been passed:  4 
+#' # - Current log value:  1.974651 
+#' # - Is stopped before:  TRUE 
+#' # - Stopped time:  3 
+#' 
 Stcp <- R6::R6Class(
   "Stcp",
   public = list(
@@ -52,6 +108,7 @@ Stcp <- R6::R6Class(
     #' For GLRCU method, it is used as the lookup window size for GLRCU statistics.
     #'
     #' @return A new `Person` object.
+    #' 
     initialize = function(method = c("ST", "SR", "CU", "GLRCU"),
                           family = c("Normal", "Ber", "Bounded"),
                           alternative = c("two.sided", "greater", "less"),
@@ -356,36 +413,64 @@ Stcp <- R6::R6Class(
       cat("- Is stopped before: ", self$isStopped(), "\n")
       cat("- Stopped time: ", self$getStoppedTime(), "\n")
     },
+    #' @description
+    #' Return weights of mixture of e-values / e-detectors.
     getWeights = function() {
       private$m_weights
     },
+    #' @description
+    #' Return lambda parameters of mixture of e-values / e-detectors.
     getLambdas = function() {
       private$m_lambdas
     },
+    #' @description
+    #' Return the log value of mixture of e-values / e-detectors.
     getLogValue = function() {
       private$m_stcpCpp$getLogValue()
     },
+    #' @description
+    #' Return the threshold of the sequential test / change detection
     getThreshold = function() {
       private$m_stcpCpp$getThreshold()
     },
+    #' @description
+    #' Return TRUE if the sequential test / change detection was stopped by crossing the threshold.
     isStopped = function() {
       private$m_stcpCpp$isStopped()
     },
+    #' @description
+    #' Return the number of observations having been passed.
     getTime = function() {
       private$m_stcpCpp$getTime()
     },
+    #' @description
+    #' Return the stopped time. If it has been never stopped, return zero.
     getStoppedTime = function() {
       private$m_stcpCpp$getStoppedTime()
     },
+    #' @description
+    #' Reset the stcp object to the initial setup.
     reset = function() {
       private$m_stcpCpp$reset()
     },
+    #' @description
+    #' Update the log value and related fields by passing a vector of observations.
+    #' 
+    #' @param xs A numeric vector of observations.
     updateLogValues = function(xs) {
       private$m_stcpCpp$updateLogValues(xs)
     },
+    #' @description
+    #' Update the log value and related fields until the log value is crossing the boundary.
+    #' 
+    #' @param xs A numeric vector of observations.
     updateLogValuesUntilStop = function(xs) {
       private$m_stcpCpp$updateLogValuesUntilStop(xs)
     },
+    #' @description
+    #' Update the log value and related fields then return updated log values by passing a vector of observations.
+    #' 
+    #' @param xs A numeric vector of observations.
     updateAndReturnHistories = function(xs) {
       private$m_stcpCpp$updateAndReturnHistories(xs)
     }

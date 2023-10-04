@@ -10,9 +10,7 @@ Authors@R:
 Description: An implementation of sequential tests and online change-point
   detection algorithms. This package supports 
   APIs of nonparametric sequential test and online change-point detection for 
-  streams of univariate (sub-)Gaussian, binary, and bounded random variables. 
-  This package also provides APIs of general E-value based sequential test and
-  E-detectors based change-point detection frameworks for advanced users. 
+  streams of univariate (sub-)Gaussian, binary, and bounded random variables.  
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
