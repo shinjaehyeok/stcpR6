@@ -47,10 +47,9 @@ devtools::install_github("shinjaehyeok/stcpR6")
 We will use E-detector for bounded random variables with the following
 setup
 
-- Pre-change:
-  $$E\left\[Y_t -\hat{Y}_t | Y_1, \dots, Y_{t-1}\right\] \leq 0$$
-- Post-change :
-  $$E\left\[Y_t -\hat{Y}_t | Y_1, \dots, Y_{t-1}\right\] > 0$$.
+- Pre-change: Expected residual is equal to zero given sample history.
+- Post-change : Expected residual is not equal to zero given sample
+  history.
 - Minimum practically interesting gap between pre- and post-means :
   $\Delta = 1$.
 - Average run length (ARL) level : ARL $\geq 1000$. i.e., False alert
@@ -71,7 +70,7 @@ normalize_obs <- function(y) {
 e_detector <- stcpR6::Stcp$new(
     method = "SR",
     family = "Bounded",
-    alternative = "greater",
+    alternative = "two.sided",
     threshold = log(kARL),
     m_pre = normalize_obs(0),
     delta_lower = 1 / kCap / 2
@@ -133,12 +132,12 @@ print(e_detector)
 #> stcp Model:
 #> - Method:  SR 
 #> - Family:  Bounded 
-#> - Alternative:  greater 
+#> - Alternative:  two.sided 
 #> - Alpha:  0.001 
 #> - m_pre:  0.5 
-#> - Num. of mixing components:  169 
+#> - Num. of mixing components:  338 
 #> - Obs. have been passed:  200 
-#> - Current log value:  5.068833 
+#> - Current log value:  4.673126 
 #> - Is stopped before:  FALSE 
 #> - Stopped time:  0
 
@@ -209,14 +208,14 @@ print(e_detector)
 #> stcp Model:
 #> - Method:  SR 
 #> - Family:  Bounded 
-#> - Alternative:  greater 
+#> - Alternative:  two.sided 
 #> - Alpha:  0.001 
 #> - m_pre:  0.5 
-#> - Num. of mixing components:  169 
+#> - Num. of mixing components:  338 
 #> - Obs. have been passed:  200 
-#> - Current log value:  45.61752 
+#> - Current log value:  44.92438 
 #> - Is stopped before:  TRUE 
-#> - Stopped time:  136
+#> - Stopped time:  138
 
 # Plot the log values and stopping threshold
 plot(seq_along(log_values), log_values, type = "l",
@@ -228,10 +227,10 @@ abline(v = e_detector$getStoppedTime(), col = 2, lty = 2)
 
 <img src="man/figures/README-fig4-1.png" width="100%" />
 
-In this case, the log values have crossed the threshold at time 136 and
-triggered alert. Detection delay was 136 - 100 = 36.
+In this case, the log values have crossed the threshold at time 138 and
+triggered alert. Detection delay was 138 - 100 = 38.
 
-Note that triggering alert at time 136 would be non-trivial if we only
+Note that triggering alert at time 138 would be non-trivial if we only
 check the residual trend as below.
 
 ``` r
