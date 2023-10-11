@@ -76,7 +76,7 @@ e_detector <- stcpR6::Stcp$new(
 ```
 
 ### Case 1. No change happened (Normal condition)
-```{r}
+```{r, fig1}
 # Set random seed for reproducibility
 set.seed(100)
 # No change
@@ -105,7 +105,7 @@ xlab = "t", ylab = "Residual", main = "Prediction error")
 
 Apply E-detector on normalized residuals
 
-```{r}
+```{r, fig2}
 res <- normalize_obs(as.numeric(y_history-y_hat))
 # In real applications, 
 # we should use e_detector$updateLogValues(res_i) to update e-deetector
@@ -129,7 +129,7 @@ abline(h = e_detector$getThreshold(), col = 2)
 Note that the log values of e-detector have remained below the threshold. E-detector didn't trigger any alert.
 
 ### Case 2. Change happened at t = 100
-```{r}
+```{r, fig3}
 # Set random seed for reproducibility
 set.seed(100)
 # Change point: 100
@@ -159,7 +159,7 @@ abline(v = v, lty = 2)
 
 Apply E-detector on normalized residuals
 
-```{r}
+```{r, fig4}
 res <- normalize_obs(as.numeric(y_history-y_hat))
 # In real applications, 
 # we should use e_detector$updateLogValues(res_i) to update e-deetector
@@ -186,7 +186,7 @@ In this case, the log values have crossed the threshold at time 136 and triggere
 
 Note that triggering alert at time 136 would be non-trivial if we only check the residual trend as below.
 
-```{r}
+```{r, fig5}
 plot(seq_along(y_history), y_history-y_hat, type = "l", 
 xlab = "t", ylab = "Residual", main = "Prediction error")
 abline(v = v, lty = 2)
