@@ -39,7 +39,12 @@ devtools::install_github("shinjaehyeok/stcpR6")
 ```
 
 ## Example
-### Tracking prediction accuracy.
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  out.width = "70%"
+)
+```
+### Setup: tracking prediction accuracy.
 *   Under pre-change, $Y_t = t + ϵ_t$ for $t = 1, 2, \dots, \nu$.
 *   Under post-change, $Y_t = t + 0.01 * (t-\nu)^2 + ϵ_t$ for $t = \nu +1, \nu+2, \dots$.
 *   Prediction: Simple linear regression based on $(t, Y_t)$ history.
@@ -110,7 +115,7 @@ res <- normalize_obs(as.numeric(y_history-y_hat))
 # In real applications, 
 # we should use e_detector$updateLogValues(res_i) to update e-deetector
 # for each newly observed residual res_i.
-# In this colab, however, we use a vectorized update for simplicity.
+# In this example, however, we use a vectorized update for simplicity.
 
 # Initialize the model.
 e_detector$reset()
@@ -164,7 +169,7 @@ res <- normalize_obs(as.numeric(y_history-y_hat))
 # In real applications, 
 # we should use e_detector$updateLogValues(res_i) to update e-deetector
 # for each newly observed residual res_i.
-# In this colab, however, we use a vectorized update for simplicity.
+# In this example, however, we use a vectorized update for simplicity.
 
 # Initialize the model.
 e_detector$reset()

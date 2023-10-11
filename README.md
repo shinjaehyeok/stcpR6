@@ -35,7 +35,7 @@ devtools::install_github("shinjaehyeok/stcpR6")
 
 ## Example
 
-### Tracking prediction accuracy.
+### Setup: tracking prediction accuracy.
 
 - Under pre-change, $Y_t = t + ϵ_t$ for $t = 1, 2, \dots, \nu$.
 - Under post-change, $Y_t = t + 0.01 * (t-\nu)^2 + ϵ_t$ for
@@ -102,7 +102,7 @@ xlab = "t", ylab = "Y_t", main = "Sample history (Black) and Prediction (Red)")
 lines(seq_along(y_hat), y_hat, col = 2)
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="70%" />
 
 ``` r
 
@@ -110,7 +110,7 @@ plot(seq_along(y_history), y_history-y_hat, type = "l",
 xlab = "t", ylab = "Residual", main = "Prediction error")
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-2.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-2.png" width="70%" />
 
 Apply E-detector on normalized residuals
 
@@ -119,7 +119,7 @@ res <- normalize_obs(as.numeric(y_history-y_hat))
 # In real applications, 
 # we should use e_detector$updateLogValues(res_i) to update e-deetector
 # for each newly observed residual res_i.
-# In this colab, however, we use a vectorized update for simplicity.
+# In this example, however, we use a vectorized update for simplicity.
 
 # Initialize the model.
 e_detector$reset()
@@ -146,7 +146,7 @@ xlab = "t", ylab = "log value", ylim = c(0, 3 * e_detector$getThreshold()))
 abline(h = e_detector$getThreshold(), col = 2)
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="70%" />
 
 Note that the log values of e-detector have remained below the
 threshold. E-detector didn’t trigger any alert.
@@ -177,7 +177,7 @@ lines(seq_along(y_hat), y_hat, col = 2)
 abline(v = v, lty = 2)
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="70%" />
 
 ``` r
 
@@ -186,7 +186,7 @@ xlab = "t", ylab = "Residual", main = "Prediction error")
 abline(v = v, lty = 2)
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-2.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-6-2.png" width="70%" />
 
 Apply E-detector on normalized residuals
 
@@ -195,7 +195,7 @@ res <- normalize_obs(as.numeric(y_history-y_hat))
 # In real applications, 
 # we should use e_detector$updateLogValues(res_i) to update e-deetector
 # for each newly observed residual res_i.
-# In this colab, however, we use a vectorized update for simplicity.
+# In this example, however, we use a vectorized update for simplicity.
 
 # Initialize the model.
 e_detector$reset()
@@ -224,7 +224,7 @@ abline(v = v, lty = 2)
 abline(v = e_detector$getStoppedTime(), col = 2, lty = 2)
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="70%" />
 
 In this case, the log values have crossed the threshold at time 136 and
 triggered alert. Detection delay was 136 - 100 = 36.
@@ -239,4 +239,4 @@ abline(v = v, lty = 2)
 abline(v = e_detector$getStoppedTime(), col = 2, lty = 2)
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="70%" />
