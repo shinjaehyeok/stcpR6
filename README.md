@@ -47,11 +47,11 @@ devtools::install_github("shinjaehyeok/stcpR6")
 We will use E-detector for bounded random variables with the following
 setup
 
-- Pre-change: $E[Y_t -\hat{Y}_t |Y_1, \dots, Y_{t-1}] \leq 0$
-- Post-change : $E[Y_t -\hat{Y}_t |Y_1, \dots, Y_{t-1}] > 0$
-- Minimum practially intersting gap between pre- and post-means :
+- Pre-change: $E[Y_t -\hat{Y}_t | Y_1, \dots, Y_{t-1}] \leq 0$
+- Post-change : $E[Y_t -\hat{Y}_t | Y_1, \dots, Y_{t-1}] > 0$.
+- Minimum practically interesting gap between pre- and post-means :
   $\Delta = 1$.
-- Average run lenght (ARL) level : ARL $\geq 1000$. i.e., False alert
+- Average run length (ARL) level : ARL $\geq 1000$. i.e., False alert
   once in 1000 times.
 - Cap residuals into $[-20, 20]$.
 
