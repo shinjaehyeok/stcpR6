@@ -16,7 +16,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports:
-    methods, Rcpp (>= 1.0.11), R6, matrixStats (>= 0.6)
+    methods, Rcpp (>= 1.0.11), R6
 LinkingTo: Rcpp
 Suggests: 
     rmarkdown,

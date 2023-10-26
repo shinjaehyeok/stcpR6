@@ -1,4 +1,6 @@
 # Modules from stcp_export.cpp
+Rcpp::loadModule(module = "HelperEx", TRUE)
+
 Rcpp::loadModule(module = "StcpMixESTNormalEx", TRUE)
 Rcpp::loadModule(module = "StcpMixESRNormalEx", TRUE)
 Rcpp::loadModule(module = "StcpMixECUNormalEx", TRUE)

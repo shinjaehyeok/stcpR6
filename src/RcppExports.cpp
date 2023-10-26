@@ -11,6 +11,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 
+RcppExport SEXP _rcpp_module_boot_HelperEx();
 RcppExport SEXP _rcpp_module_boot_StcpMixESTNormalEx();
 RcppExport SEXP _rcpp_module_boot_StcpMixESRNormalEx();
 RcppExport SEXP _rcpp_module_boot_StcpMixECUNormalEx();
@@ -28,6 +29,7 @@ RcppExport SEXP _rcpp_module_boot_GLRCUBerGreaterEx();
 RcppExport SEXP _rcpp_module_boot_GLRCUBerLessEx();
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_rcpp_module_boot_HelperEx", (DL_FUNC) &_rcpp_module_boot_HelperEx, 0},
     {"_rcpp_module_boot_StcpMixESTNormalEx", (DL_FUNC) &_rcpp_module_boot_StcpMixESTNormalEx, 0},
     {"_rcpp_module_boot_StcpMixESRNormalEx", (DL_FUNC) &_rcpp_module_boot_StcpMixESRNormalEx, 0},
     {"_rcpp_module_boot_StcpMixECUNormalEx", (DL_FUNC) &_rcpp_module_boot_StcpMixECUNormalEx, 0},

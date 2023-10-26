@@ -27,9 +27,27 @@
 
 namespace stcp
 {
+    // Constants and global helper functions
     constexpr double kEps{1e-12};
     constexpr double kNegInf{-std::numeric_limits<double>::infinity()};
 
+    inline double logSumExp(const std::vector<double> &xs)
+    {
+        if (xs.empty())
+        {
+            throw std::runtime_error("Empty vector is not allowed for the logSumExp function.");
+        }
+        double max_x = *std::max_element(xs.begin(), xs.end());
+        double sum_exp{0.0};
+        for (auto &x : xs)
+        {
+            sum_exp += std::exp(x - max_x);
+        }
+
+        return log(sum_exp) + max_x;
+    }
+
+    // stcp interface classes
     class IBaselineIncrement
     {
     public:

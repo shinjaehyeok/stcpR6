@@ -83,7 +83,7 @@ compute_baseline <- function(alpha,
   
   log_f_with_exp <- function(g) {
     exp_vec <- c(-g, log_f(g))
-    return(matrixStats::logSumExp(exp_vec))
+    return(logSumExpTrick(exp_vec))
   }
   
   log_f_u <- log_f(v_min * d_u)

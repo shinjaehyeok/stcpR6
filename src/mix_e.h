@@ -92,14 +92,7 @@ namespace stcp
             log_wls[i] += m_e_objs[i].getLogValue();
         }
 
-        double max_log_wl = *std::max_element(log_wls.begin(), log_wls.end());
-        double sum_exp{0.0};
-        for (auto &log_wl : log_wls)
-        {
-            sum_exp += std::exp(log_wl - max_log_wl);
-        }
-
-        return log(sum_exp) + max_log_wl;
+        return logSumExp(log_wls);
     }
 
     template <typename E>

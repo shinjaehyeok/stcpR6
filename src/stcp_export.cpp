@@ -4,6 +4,12 @@
 
 #include "stcp_export.h"
 
+RCPP_MODULE(HelperEx) {
+  using namespace stcp;
+  Rcpp::function("logSumExp", &logSumExp,
+           "Compute log-sum-exp of a numeric vector.");
+}
+
 RCPP_MODULE(StcpMixESTNormalEx) {
   using namespace stcp;
   using GE = ST<Normal>;
