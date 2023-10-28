@@ -173,7 +173,6 @@ namespace stcp
         }
 
     protected:
-        double m_lambda{0.5};
         double m_mu{0.5};
         void setupBounded(const double lambda, const double mu)
         {
