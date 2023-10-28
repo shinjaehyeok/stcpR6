@@ -51,7 +51,7 @@ namespace stcp
     class IBaselineIncrement
     {
     public:
-        virtual double computeLogBaseValue(const double x) = 0;
+        virtual double computeLogBaseValue(const double &x) = 0;
 
         virtual ~IBaselineIncrement() {}
     };
@@ -59,11 +59,11 @@ namespace stcp
     class ILogLRIncrement
     {
     public:
-        virtual double computeLogBaseValue(const double x) = 0;
+        virtual double computeLogBaseValue(const double &x) = 0;
         // Unrestricted mle for h1 parameter
-        virtual void updateH1MLE(double &h_1_mle, const double x, const int n) = 0; 
+        virtual void updateH1MLE(double &h_1_mle, const double &x, const int &n) = 0; 
         // MaxLLR must be computed under H1 restriction.
-        virtual double computeMaxLLR(const double h_1_mle, const int n) = 0; 
+        virtual double computeMaxLLR(const double &h_1_mle, const int &n) = 0; 
         
         virtual ~ILogLRIncrement() {}
     };
@@ -73,7 +73,7 @@ namespace stcp
     public:
         virtual double getLogValue() = 0;
         virtual void reset() = 0;
-        virtual void updateLogValue(const double x) = 0;
+        virtual void updateLogValue(const double &x) = 0;
 
         virtual ~IGeneralE() {}
     };
@@ -90,12 +90,12 @@ namespace stcp
 
         virtual void reset() = 0;
 
-        virtual void updateLogValue(const double x) = 0;
+        virtual void updateLogValue(const double &x) = 0;
         virtual void updateLogValues(const std::vector<double> &xs) = 0;
         virtual void updateLogValuesUntilStop(const std::vector<double> &xs) = 0;
 
         // For visualization, IStcp support update and return updated history
-        virtual double updateAndReturnHistory(const double x) = 0;
+        virtual double updateAndReturnHistory(const double &x) = 0;
         virtual std::vector<double> updateAndReturnHistories(const std::vector<double> &xs) = 0;
 
         virtual ~IStcp() {}

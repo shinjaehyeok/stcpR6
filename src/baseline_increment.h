@@ -29,11 +29,11 @@ namespace stcp
             : m_lambda{0.0}
         {
         }
-        ExpBaselineIncrement(const double lambda)
+        ExpBaselineIncrement(const double &lambda)
             : m_lambda{lambda}
         {
         }
-        virtual double computeLogBaseValue(const double x) override = 0;
+        virtual double computeLogBaseValue(const double &x) override = 0;
 
     protected:
         double m_lambda{0};
@@ -48,16 +48,16 @@ namespace stcp
             : Normal::Normal(0.0, 0.0, 1.0)
         {
         }
-        Normal(const double lambda)
+        Normal(const double &lambda)
             : Normal::Normal(lambda, 0.0, 1.0)
         {
         }
-        Normal(const double lambda, const double mu, const double sig)
+        Normal(const double &lambda, const double &mu, const double &sig)
             : ExpBaselineIncrement{lambda}
         {
             setupNormal(lambda, mu, sig);
         }
-        double computeLogBaseValue(const double x) override
+        double computeLogBaseValue(const double &x) override
         {
             return m_lambda * x - m_lambda_times_mu_plus_psi;
         }
@@ -67,15 +67,15 @@ namespace stcp
         double m_sig{1.0};
         double m_psi{0.0};
         double m_lambda_times_mu_plus_psi{0.0};
-        double compute_psi(const double lambda, const double sig)
+        double compute_psi(const double &lambda, const double &sig)
         {
             return lambda * lambda * sig * sig * 0.5;
         }
-        double compute_lambda_times_mu_plus_psi(const double lambda, const double mu, const double sig)
+        double compute_lambda_times_mu_plus_psi(const double &lambda, const double &mu, const double &sig)
         {
             return lambda * mu + compute_psi(lambda, sig);
         }
-        void setupNormal(const double lambda, const double mu, const double sig)
+        void setupNormal(const double &lambda, const double &mu, const double &sig)
         {
             if (sig <= 0)
             {
@@ -96,16 +96,16 @@ namespace stcp
             : Ber::Ber(0.0, 0.5)
         {
         }
-        Ber(const double lambda)
+        Ber(const double &lambda)
             : Ber::Ber(lambda, 0.5)
         {
         }
-        Ber(const double lambda, const double p)
+        Ber(const double &lambda, const double &p)
             : ExpBaselineIncrement{lambda}
         {
             setupBer(lambda, p);
         }
-        double computeLogBaseValue(const double x) override
+        double computeLogBaseValue(const double &x) override
         {
             if (abs(x) < kEps)
             {
@@ -125,18 +125,18 @@ namespace stcp
         double m_p{0.5};
         double m_log_base_val_x_one{0.0};
         double m_log_base_val_x_zero{0.0};
-        double compute_psi_uncentered(const double lambda, const double p)
+        double compute_psi_uncentered(const double &lambda, const double &p)
         {
             return log(1 - p + p * exp(lambda));
         }
-        void check_prob_param_range(const double p)
+        void check_prob_param_range(const double &p)
         {
             if (p <= 0.0 || p >= 1.0)
             {
                 throw std::runtime_error("Probability parameter must be strictly inbetween 0.0 and 1.0.");
             }
         }
-        void setupBer(const double lambda, const double p)
+        void setupBer(const double &lambda, const double &p)
         {
             check_prob_param_range(p);
             m_p = p,
@@ -153,16 +153,16 @@ namespace stcp
             : Bounded::Bounded(0.5, 0.5)
         {
         }
-        Bounded(const double lambda)
+        Bounded(const double &lambda)
             : Bounded::Bounded(lambda, 0.5)
         {
         }
-        Bounded(const double lambda, const double mu)
+        Bounded(const double &lambda, const double &mu)
             : ExpBaselineIncrement{lambda}
         {
             setupBounded(lambda, mu);
         }
-        double computeLogBaseValue(const double x) override
+        double computeLogBaseValue(const double &x) override
         {
             if (x < 0.0)
             {
@@ -174,7 +174,7 @@ namespace stcp
 
     protected:
         double m_mu{0.5};
-        void setupBounded(const double lambda, const double mu)
+        void setupBounded(const double &lambda, const double &mu)
         {
             if (lambda >= 1.0 || lambda <= mu / (mu-1.0))
             {

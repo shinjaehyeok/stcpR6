@@ -42,7 +42,7 @@ namespace stcp
 
         double getLogValue() override { return m_log_value; }
         void reset() override { m_log_value = kNegInf; }
-        virtual void updateLogValue(const double x) override = 0;
+        virtual void updateLogValue(const double &x) override = 0;
 
     protected:
         double m_log_value;
@@ -66,7 +66,7 @@ namespace stcp
             this->m_log_value = 0.0;
         }
         void reset() override { this->m_log_value = 0.0; }
-        void updateLogValue(const double x) override
+        void updateLogValue(const double &x) override
         {
             this->m_log_value += this->m_base_obj.computeLogBaseValue(x);
         }
@@ -76,7 +76,7 @@ namespace stcp
     {
     public:
         using BaselineE<L>::BaselineE;
-        void updateLogValue(const double x) override
+        void updateLogValue(const double &x) override
         {
             this->m_log_value =
                 log(1 + exp(this->m_log_value)) + this->m_base_obj.computeLogBaseValue(x);
@@ -87,7 +87,7 @@ namespace stcp
     {
     public:
         using BaselineE<L>::BaselineE;
-        void updateLogValue(const double x) override
+        void updateLogValue(const double &x) override
         {
             this->m_log_value =
                 std::max(0.0, this->m_log_value) + this->m_base_obj.computeLogBaseValue(x);

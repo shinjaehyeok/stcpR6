@@ -41,7 +41,7 @@ namespace stcp
 
         double getLogValue() override { return m_log_value; }
         void reset() override { m_log_value = kNegInf; }
-        virtual void updateLogValue(const double x) override = 0;
+        virtual void updateLogValue(const double &x) override = 0;
 
     protected:
         double m_log_value;
@@ -57,11 +57,11 @@ namespace stcp
             : LogLRE<L>::LogLRE()
         {
         }
-        GLRCU(const int window_size)
+        GLRCU(const int &window_size)
             : LogLRE<L>::LogLRE(), m_window_size{window_size}
         {
         }
-        GLRCU(const L &base_obj, const int window_size)
+        GLRCU(const L &base_obj, const int &window_size)
             : LogLRE<L>::LogLRE(base_obj), m_window_size{window_size}
         {
         }
@@ -70,7 +70,7 @@ namespace stcp
             this->m_log_value = kNegInf; 
             m_h1_mle_history.clear();
         }
-        void updateLogValue(const double x) override
+        void updateLogValue(const double &x) override
         {
             if (static_cast<int>(m_h1_mle_history.size()) >= m_window_size)
             {

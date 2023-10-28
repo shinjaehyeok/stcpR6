@@ -38,7 +38,7 @@ namespace stcp
         Stcp() {}
         Stcp(const E &e_obj)
             : m_e_obj{e_obj} {}
-        Stcp(const E &e_obj, const double threshold)
+        Stcp(const E &e_obj, const double &threshold)
             : m_e_obj{e_obj}, m_threshold{threshold} {}
 
         double getLogValue() override { return m_e_obj.getLogValue(); }
@@ -56,11 +56,11 @@ namespace stcp
             m_stopped_time = 0;
         }
 
-        void updateLogValue(const double x) override;
+        void updateLogValue(const double &x) override;
         void updateLogValues(const std::vector<double> &xs) override;
         void updateLogValuesUntilStop(const std::vector<double> &xs) override;
 
-        double updateAndReturnHistory(const double x) override;
+        double updateAndReturnHistory(const double &x) override;
         std::vector<double> updateAndReturnHistories(const std::vector<double> &xs) override;
 
     protected:
@@ -73,7 +73,7 @@ namespace stcp
 
     // Public members
     template <typename E>
-    inline void Stcp<E>::updateLogValue(const double x)
+    inline void Stcp<E>::updateLogValue(const double &x)
     {
         m_e_obj.updateLogValue(x);
         m_time++;
@@ -108,7 +108,7 @@ namespace stcp
         }
     }
     template <typename E>
-    inline double Stcp<E>::updateAndReturnHistory(const double x)
+    inline double Stcp<E>::updateAndReturnHistory(const double &x)
     {
         this->updateLogValue(x);
         return this->getLogValue();

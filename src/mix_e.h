@@ -35,7 +35,7 @@ namespace stcp
 
         double getLogValue() override;
         void reset() override;
-        void updateLogValue(const double x) override;
+        void updateLogValue(const double &x) override;
 
         std::vector<double> getWeights() { return m_weights; }
         std::vector<double> getLogValues();
@@ -105,7 +105,7 @@ namespace stcp
     }
 
     template <typename E>
-    inline void MixE<E>::updateLogValue(const double x)
+    inline void MixE<E>::updateLogValue(const double &x)
     {
         for (auto &e_obj : m_e_objs)
         {

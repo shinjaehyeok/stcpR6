@@ -35,11 +35,11 @@ namespace stcp
             : Stcp<MixE<E>>::Stcp()
         {
         }
-        StcpNormal(const double threshold,
+        StcpNormal(const double &threshold,
                    const std::vector<double> &weights,
                    const std::vector<double> &lambdas,
-                   const double mu,
-                   const double sig)
+                   const double &mu,
+                   const double &sig)
             : Stcp<MixE<E>>::Stcp()
         {
             this->m_threshold = threshold;
@@ -67,10 +67,10 @@ namespace stcp
         {
         }
         StcpBer(
-            const double threshold,
+            const double &threshold,
             const std::vector<double> &weights,
             const std::vector<double> &lambdas,
-            const double p)
+            const double &p)
             : Stcp<MixE<E>>::Stcp()
         {
             this->m_threshold = threshold;
@@ -98,10 +98,10 @@ namespace stcp
         {
         }
         StcpBounded(
-            const double threshold,
+            const double &threshold,
             const std::vector<double> &weights,
             const std::vector<double> &lambdas,
-            const double mu)
+            const double &mu)
             : Stcp<MixE<E>>::Stcp()
         {
             this->m_threshold = threshold;
@@ -129,10 +129,10 @@ namespace stcp
         {
         }
         GLRCUNormal(
-            const double threshold,
-            const double mu,
-            const double sig,
-            const int window_size)
+            const double &threshold,
+            const double &mu,
+            const double &sig,
+            const int &window_size)
             : Stcp<GLRCU<L>>::Stcp()
         {
             this->m_threshold = threshold;
@@ -155,9 +155,9 @@ namespace stcp
         {
         }
         GLRCUBer(
-            const double threshold,
-            const double p,
-            const int window_size)
+            const double &threshold,
+            const double &p,
+            const int &window_size)
             : Stcp<GLRCU<L>>::Stcp()
         {
             this->m_threshold = threshold;
