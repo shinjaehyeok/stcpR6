@@ -146,7 +146,7 @@ namespace stcp
     {
         double weights_sum{0.0};
         std::vector<double> log_weights;
-
+        log_weights.reserve(weights.size());
         for (auto &w : weights)
         {
             if (w <= 0)

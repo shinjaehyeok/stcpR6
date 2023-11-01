@@ -44,6 +44,7 @@ namespace stcp
         {
             this->m_threshold = threshold;
             std::vector<E> e_objs;
+            e_objs.reserve(lambdas.size());
             for (auto lambda : lambdas)
             {
                 e_objs.push_back(E(Normal(lambda, mu, sig)));
@@ -75,6 +76,7 @@ namespace stcp
         {
             this->m_threshold = threshold;
             std::vector<E> e_objs;
+            e_objs.reserve(lambdas.size());
             for (auto lambda : lambdas)
             {
                 e_objs.push_back(E(Ber(lambda, p)));
@@ -106,6 +108,7 @@ namespace stcp
         {
             this->m_threshold = threshold;
             std::vector<E> e_objs;
+            e_objs.reserve(lambdas.size());
             for (auto lambda : lambdas)
             {
                 e_objs.push_back(E(Bounded(lambda, mu)));
