@@ -1,6 +1,6 @@
 Package: stcpR6
 Title: Sequential Test and Change-Point detection algorithms based on E-values / E-detectors
-Version: 0.9.3
+Version: 0.9.4
 Authors@R: 
     person(given = "Jaehyeok",
            family = "Shin",
