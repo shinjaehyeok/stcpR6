@@ -52,6 +52,11 @@ namespace stcp
     {
     public:
         virtual double computeLogBaseValue(const double &x) = 0;
+        // Exponential baseline can be computed
+        // by using x_bar = 1/n * sum_{i=1}^n x_i and n values as inputs.
+        // General baseline may be computed by s/v and v as inputs.
+        // This method must take n as a double rather than integer for generality.
+        virtual double computeLogBaseValueByAvg(const double &x_bar, const double &n)  = 0;
 
         virtual ~IBaselineIncrement() {}
     };
@@ -74,6 +79,7 @@ namespace stcp
         virtual double getLogValue() = 0;
         virtual void reset() = 0;
         virtual void updateLogValue(const double &x) = 0;
+        virtual void updateLogValueByAvg(const double &x_bar, const double &n)  = 0;
 
         virtual ~IGeneralE() {}
     };
@@ -85,18 +91,25 @@ namespace stcp
         virtual double getThreshold() = 0;
 
         virtual bool isStopped() = 0;
-        virtual int getTime() = 0;
-        virtual int getStoppedTime() = 0;
+        virtual double getTime() = 0; // Use double for generality
+        virtual double getStoppedTime() = 0; // Use double for generality
 
         virtual void reset() = 0;
 
         virtual void updateLogValue(const double &x) = 0;
         virtual void updateLogValues(const std::vector<double> &xs) = 0;
         virtual void updateLogValuesUntilStop(const std::vector<double> &xs) = 0;
+    
+        virtual void updateLogValueByAvg(const double &x_bar, const double &n) = 0;
+        virtual void updateLogValuesByAvgs(const std::vector<double> &x_bars, const std::vector<double> &ns) = 0;
+        virtual void updateLogValuesUntilStopByAvgs(const std::vector<double> &x_bars, const std::vector<double> &ns) = 0;
 
         // For visualization, IStcp support update and return updated history
         virtual double updateAndReturnHistory(const double &x) = 0;
         virtual std::vector<double> updateAndReturnHistories(const std::vector<double> &xs) = 0;
+
+        virtual double updateAndReturnHistoryByAvg(const double &x_bar, const double &n) = 0;
+        virtual std::vector<double> updateAndReturnHistoriesByAvgs(const std::vector<double> &x_bars, const std::vector<double> &ns) = 0;
 
         virtual ~IStcp() {}
     };

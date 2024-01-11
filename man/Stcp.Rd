@@ -80,6 +80,9 @@ stcp # or stcp$print() or print(stcp)
 \item \href{#method-Stcp-updateLogValues}{\code{Stcp$updateLogValues()}}
 \item \href{#method-Stcp-updateLogValuesUntilStop}{\code{Stcp$updateLogValuesUntilStop()}}
 \item \href{#method-Stcp-updateAndReturnHistories}{\code{Stcp$updateAndReturnHistories()}}
+\item \href{#method-Stcp-updateLogValuesByAvgs}{\code{Stcp$updateLogValuesByAvgs()}}
+\item \href{#method-Stcp-updateLogValuesUntilStopByAvgs}{\code{Stcp$updateLogValuesUntilStopByAvgs()}}
+\item \href{#method-Stcp-updateAndReturnHistoriesByAvgs}{\code{Stcp$updateAndReturnHistoriesByAvgs()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -292,6 +295,67 @@ Update the log value and related fields then return updated log values by passin
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{xs}}{A numeric vector of observations.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Stcp-updateLogValuesByAvgs"></a>}}
+\if{latex}{\out{\hypertarget{method-Stcp-updateLogValuesByAvgs}{}}}
+\subsection{Method \code{updateLogValuesByAvgs()}}{
+Update the log value and related fields by passing
+a vector of averages and number of corresponding samples.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Stcp$updateLogValuesByAvgs(x_bars, ns)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x_bars}}{A numeric vector of averages.}
+
+\item{\code{ns}}{A numeric vector of sample sizes.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Stcp-updateLogValuesUntilStopByAvgs"></a>}}
+\if{latex}{\out{\hypertarget{method-Stcp-updateLogValuesUntilStopByAvgs}{}}}
+\subsection{Method \code{updateLogValuesUntilStopByAvgs()}}{
+Update the log value and related fields by passing
+a vector of averages and number of corresponding samples
+until the log value is crossing the boundary.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Stcp$updateLogValuesUntilStopByAvgs(x_bars, ns)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x_bars}}{A numeric vector of averages.}
+
+\item{\code{ns}}{A numeric vector of sample sizes.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Stcp-updateAndReturnHistoriesByAvgs"></a>}}
+\if{latex}{\out{\hypertarget{method-Stcp-updateAndReturnHistoriesByAvgs}{}}}
+\subsection{Method \code{updateAndReturnHistoriesByAvgs()}}{
+Update the log value and related fields then return updated log values
+a vector of averages and number of corresponding samples.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Stcp$updateAndReturnHistoriesByAvgs(x_bars, ns)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x_bars}}{A numeric vector of averages.}
+
+\item{\code{ns}}{A numeric vector of sample sizes.}
 }
 \if{html}{\out{</div>}}
 }

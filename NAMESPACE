@@ -2,6 +2,7 @@
 
 export(Stcp)
 export(compute_baseline)
+export(compute_baseline_for_sample_size)
 export(generate_sub_B_fn)
 export(generate_sub_E_fn)
 export(generate_sub_G_fn)

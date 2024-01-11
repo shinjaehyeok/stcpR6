@@ -79,4 +79,16 @@ test_that("Sequentail test for Normal - 2. Mixture", {
   expect_equal(stcp$getTime(), 2)
   expect_equal(stcp$isStopped(), TRUE)
   expect_equal(stcp$getStoppedTime(), 2)
+  
+  
+  x_bars <- c(2, 2)
+  ns <- c(2, 1)
+  expected_log_value_by_avgs <- expected_log_value[2:3]
+  stcp$reset()
+  updates <- stcp$updateAndReturnHistoriesByAvgs(x_bars, ns)
+  expect_equal(updates, expected_log_value_by_avgs)
+  expect_equal(stcp$getTime(), length(obs))
+  expect_equal(stcp$isStopped(), TRUE)
+  expect_equal(stcp$getStoppedTime(), 2)
+  
 })

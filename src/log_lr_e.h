@@ -42,6 +42,10 @@ namespace stcp
         double getLogValue() override { return m_log_value; }
         void reset() override { m_log_value = kNegInf; }
         virtual void updateLogValue(const double &x) override = 0;
+        void updateLogValueByAvg(const double &x_bar, const double &n) override
+        {
+            throw std::runtime_error("updateLogValueByAvg is not supported for LR based methods");
+        }
 
     protected:
         double m_log_value;

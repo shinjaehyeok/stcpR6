@@ -43,6 +43,7 @@ namespace stcp
         double getLogValue() override { return m_log_value; }
         void reset() override { m_log_value = kNegInf; }
         virtual void updateLogValue(const double &x) override = 0;
+        virtual void updateLogValueByAvg(const double &x_bar, const double &n) override = 0;
 
     protected:
         double m_log_value;
@@ -70,6 +71,10 @@ namespace stcp
         {
             this->m_log_value += this->m_base_obj.computeLogBaseValue(x);
         }
+        void updateLogValueByAvg(const double &x_bar, const double &n) override
+        {
+            this->m_log_value += this->m_base_obj.computeLogBaseValueByAvg(x_bar, n);
+        }
     };
     template <typename L>
     class SR : public BaselineE<L>
@@ -81,6 +86,11 @@ namespace stcp
             this->m_log_value =
                 log(1 + exp(this->m_log_value)) + this->m_base_obj.computeLogBaseValue(x);
         }
+        void updateLogValueByAvg(const double &x_bar, const double &n) override
+        {
+            this->m_log_value =
+                log(1 + exp(this->m_log_value)) + this->m_base_obj.computeLogBaseValueByAvg(x_bar, n);
+        }
     };
     template <typename L>
     class CU : public BaselineE<L>
@@ -91,6 +101,11 @@ namespace stcp
         {
             this->m_log_value =
                 std::max(0.0, this->m_log_value) + this->m_base_obj.computeLogBaseValue(x);
+        }
+        void updateLogValueByAvg(const double &x_bar, const double &n) override
+        {
+            this->m_log_value =
+                std::max(0.0, this->m_log_value) + this->m_base_obj.computeLogBaseValueByAvg(x_bar, n);
         }
     };
 } // End of namespace stcp

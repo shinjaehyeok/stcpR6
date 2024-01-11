@@ -26,6 +26,9 @@ RCPP_MODULE(StcpMixESTNormalEx) {
     .method("updateLogValues", &Stcp<MixE<GE>>::updateLogValues)
     .method("updateLogValuesUntilStop", &Stcp<MixE<GE>>::updateLogValuesUntilStop)
     .method("updateAndReturnHistories", &Stcp<MixE<GE>>::updateAndReturnHistories)
+    .method("updateLogValuesByAvgs", &Stcp<MixE<GE>>::updateLogValuesByAvgs)
+    .method("updateLogValuesUntilStopByAvgs", &Stcp<MixE<GE>>::updateLogValuesUntilStopByAvgs)
+    .method("updateAndReturnHistoriesByAvgs", &Stcp<MixE<GE>>::updateAndReturnHistoriesByAvgs)
     ;
 
     
@@ -56,6 +59,9 @@ RCPP_MODULE(StcpMixESRNormalEx) {
   .method("updateLogValues", &Stcp<MixE<GE>>::updateLogValues)
   .method("updateLogValuesUntilStop", &Stcp<MixE<GE>>::updateLogValuesUntilStop)
   .method("updateAndReturnHistories", &Stcp<MixE<GE>>::updateAndReturnHistories)
+  .method("updateLogValuesByAvgs", &Stcp<MixE<GE>>::updateLogValuesByAvgs)
+  .method("updateLogValuesUntilStopByAvgs", &Stcp<MixE<GE>>::updateLogValuesUntilStopByAvgs)
+  .method("updateAndReturnHistoriesByAvgs", &Stcp<MixE<GE>>::updateAndReturnHistoriesByAvgs)
   ;
   
   
@@ -86,6 +92,9 @@ RCPP_MODULE(StcpMixECUNormalEx) {
   .method("updateLogValues", &Stcp<MixE<GE>>::updateLogValues)
   .method("updateLogValuesUntilStop", &Stcp<MixE<GE>>::updateLogValuesUntilStop)
   .method("updateAndReturnHistories", &Stcp<MixE<GE>>::updateAndReturnHistories)
+  .method("updateLogValuesByAvgs", &Stcp<MixE<GE>>::updateLogValuesByAvgs)
+  .method("updateLogValuesUntilStopByAvgs", &Stcp<MixE<GE>>::updateLogValuesUntilStopByAvgs)
+  .method("updateAndReturnHistoriesByAvgs", &Stcp<MixE<GE>>::updateAndReturnHistoriesByAvgs)
   ;
   
   
@@ -116,6 +125,9 @@ RCPP_MODULE(StcpMixESTBerEx) {
   .method("updateLogValues", &Stcp<MixE<GE>>::updateLogValues)
   .method("updateLogValuesUntilStop", &Stcp<MixE<GE>>::updateLogValuesUntilStop)
   .method("updateAndReturnHistories", &Stcp<MixE<GE>>::updateAndReturnHistories)
+  .method("updateLogValuesByAvgs", &Stcp<MixE<GE>>::updateLogValuesByAvgs)
+  .method("updateLogValuesUntilStopByAvgs", &Stcp<MixE<GE>>::updateLogValuesUntilStopByAvgs)
+  .method("updateAndReturnHistoriesByAvgs", &Stcp<MixE<GE>>::updateAndReturnHistoriesByAvgs)
   ;
   
   
@@ -146,6 +158,9 @@ RCPP_MODULE(StcpMixESRBerEx) {
   .method("updateLogValues", &Stcp<MixE<GE>>::updateLogValues)
   .method("updateLogValuesUntilStop", &Stcp<MixE<GE>>::updateLogValuesUntilStop)
   .method("updateAndReturnHistories", &Stcp<MixE<GE>>::updateAndReturnHistories)
+  .method("updateLogValuesByAvgs", &Stcp<MixE<GE>>::updateLogValuesByAvgs)
+  .method("updateLogValuesUntilStopByAvgs", &Stcp<MixE<GE>>::updateLogValuesUntilStopByAvgs)
+  .method("updateAndReturnHistoriesByAvgs", &Stcp<MixE<GE>>::updateAndReturnHistoriesByAvgs)
   ;
   
   
@@ -176,6 +191,9 @@ RCPP_MODULE(StcpMixECUBerEx) {
   .method("updateLogValues", &Stcp<MixE<GE>>::updateLogValues)
   .method("updateLogValuesUntilStop", &Stcp<MixE<GE>>::updateLogValuesUntilStop)
   .method("updateAndReturnHistories", &Stcp<MixE<GE>>::updateAndReturnHistories)
+  .method("updateLogValuesByAvgs", &Stcp<MixE<GE>>::updateLogValuesByAvgs)
+  .method("updateLogValuesUntilStopByAvgs", &Stcp<MixE<GE>>::updateLogValuesUntilStopByAvgs)
+  .method("updateAndReturnHistoriesByAvgs", &Stcp<MixE<GE>>::updateAndReturnHistoriesByAvgs)
   ;
   
   

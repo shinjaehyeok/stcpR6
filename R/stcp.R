@@ -473,6 +473,34 @@ Stcp <- R6::R6Class(
     #' @param xs A numeric vector of observations.
     updateAndReturnHistories = function(xs) {
       private$m_stcpCpp$updateAndReturnHistories(xs)
+    },
+    #' @description
+    #' Update the log value and related fields by passing 
+    #' a vector of averages and number of corresponding samples.
+    #' 
+    #' @param x_bars A numeric vector of averages.
+    #' @param ns A numeric vector of sample sizes.
+    updateLogValuesByAvgs = function(x_bars, ns) {
+      private$m_stcpCpp$updateLogValuesByAvgs(x_bars, ns)
+    },
+    #' @description
+    #' Update the log value and related fields by passing 
+    #' a vector of averages and number of corresponding samples
+    #' until the log value is crossing the boundary.
+    #' 
+    #' @param x_bars A numeric vector of averages.
+    #' @param ns A numeric vector of sample sizes.
+    updateLogValuesUntilStopByAvgs = function(x_bars, ns) {
+      private$m_stcpCpp$updateLogValuesUntilStopByAvgs(x_bars, ns)
+    },
+    #' @description
+    #' Update the log value and related fields then return updated log values
+    #' a vector of averages and number of corresponding samples.
+    #' 
+    #' @param x_bars A numeric vector of averages.
+    #' @param ns A numeric vector of sample sizes.
+    updateAndReturnHistoriesByAvgs = function(x_bars, ns) {
+      private$m_stcpCpp$updateAndReturnHistoriesByAvgs(x_bars, ns)
     }
   ),
   private = list(

@@ -34,6 +34,10 @@ namespace stcp
         {
         }
         virtual double computeLogBaseValue(const double &x) override = 0;
+        // Exponential baseline can support a batch update
+        // by using x_bar = 1/n * sum_{i=1}^n x_i and n values as inputs.
+        // Note batch update should take n as a double rather than integer for generality.
+        virtual double computeLogBaseValueByAvg(const double &x_bar, const double &n) override = 0;
 
     protected:
         double m_lambda{0};
@@ -61,6 +65,11 @@ namespace stcp
         {
             return m_lambda * x - m_lambda_times_mu_plus_psi;
         }
+        double computeLogBaseValueByAvg(const double &x_bar, const double &n) override
+        {
+            return n * Normal::computeLogBaseValue(x_bar);
+        }
+        
 
     protected:
         double m_mu{0.0};
@@ -120,6 +129,10 @@ namespace stcp
                 throw std::runtime_error("Input must be either 0.0 or 1.0 or false or true.");
             }
         }
+        double computeLogBaseValueByAvg(const double &x_bar, const double &n) override
+        {
+            return n * (m_lambda * x_bar + m_log_base_val_x_zero);
+        }
 
     protected:
         double m_p{0.5};
@@ -145,7 +158,6 @@ namespace stcp
         }
     };
 
-    // General bounded baseline increment
     class Bounded : public ExpBaselineIncrement
     {
     public:
@@ -170,6 +182,10 @@ namespace stcp
             }
 
             return log(1.0 + m_lambda * (x / m_mu - 1.0));
+        }
+        double computeLogBaseValueByAvg(const double &x_bar, const double &n) override
+        {
+            throw std::runtime_error("computeLogBaseValueByAvg cannot be used for the Bounded case.");
         }
 
     protected:
