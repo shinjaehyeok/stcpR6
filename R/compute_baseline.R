@@ -163,3 +163,66 @@ compute_baseline <- function(alpha,
   )
   return(baseline_list)
 }
+
+#' Compute baseline parameters given target variance process bounds.
+#'
+#' Given target variance process bounds for confidence sequences, compute baseline parameters.
+#'
+#' @param v_upper Upper bound of the target variance process bound
+#' @param v_lower Lower bound of the target variance process bound.
+#' @inheritParams compute_baseline
+#'
+#' @return A list of baseline parameters to build \code{ci_helper}
+#' @export
+#'
+compute_baseline_for_sample_size <- function(alpha,
+                                             v_upper,
+                                             v_lower,
+                                             psi_fn_list = generate_sub_G_fn(),
+                                             v_min = 1,
+                                             k_max = 200,
+                                             tol = 1e-6) {
+  if (!(v_lower > 0 & v_upper >=  v_lower)) {
+    stop("v_lower and v_upper must be positive with v_lower <= v_upper.")
+  }
+  
+  if (v_lower < v_min) {
+    warning("v_lower is lower than v_min. v_min will be used intead of v_lower.")
+    v_lower <- v_min
+  }
+  
+  if (v_lower == v_upper) {
+    # Trivial case
+    g_alpha <- log(1 / alpha)
+  } else {
+    delta_init_upper <-
+      psi_fn_list$psi_star_inv(log(1 / alpha)  / v_lower)
+    delta_init_lower <-
+      psi_fn_list$psi_star_inv(log(1 / alpha)  / v_upper)
+    baseline_init <- compute_baseline(alpha,
+                                      delta_init_lower,
+                                      delta_init_upper,
+                                      psi_fn_list,
+                                      v_min,
+                                      k_max)
+    g_alpha <- baseline_init$g_alpha
+  }
+  
+  # Compute delta bound
+  delta_lower <-
+    psi_fn_list$psi_star_inv(g_alpha / v_upper)
+  delta_upper <-
+    psi_fn_list$psi_star_inv(g_alpha  / v_lower)
+  
+  # Compute baseline parameters
+  baseline_param <- compute_baseline(alpha,
+                                     delta_lower,
+                                     delta_upper,
+                                     psi_fn_list,
+                                     v_min,
+                                     k_max)
+  return(baseline_param)
+}
+
+
+
