@@ -107,7 +107,7 @@ Stcp <- R6::R6Class(
     #' @param k_max Positive integer to determine the maximum number of baselines.
     #' For GLRCU method, it is used as the lookup window size for GLRCU statistics.
     #'
-    #' @return A new `Person` object.
+    #' @return A new `Stcp` object.
     #' 
     initialize = function(method = c("ST", "SR", "CU", "GLRCU"),
                           family = c("Normal", "Ber", "Bounded"),

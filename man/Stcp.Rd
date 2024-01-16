@@ -155,7 +155,7 @@ For GLRCU method, it is used as the lookup window size for GLRCU statistics.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A new \code{Person} object.
+A new \code{Stcp} object.
 }
 }
 \if{html}{\out{<hr>}}
