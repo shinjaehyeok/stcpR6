@@ -11,7 +11,7 @@ compute_baseline(
   psi_fn_list = generate_sub_G_fn(),
   v_min = 1,
   k_max = 200,
-  tol = 1e-06
+  tol = 1e-10
 )
 }
 \arguments{
@@ -27,7 +27,7 @@ compute_baseline(
 
 \item{k_max}{Positive integer to determine the maximum number of baselines. Default is \code{200}.}
 
-\item{tol}{Tolerance of root-finding, positive numeric. Default is 1e-6.}
+\item{tol}{Tolerance of root-finding, positive numeric. Default is 1e-10.}
 }
 \value{
 A list of 1. Parameters of baseline processes, 2. Mixing weights, 3. Auxiliary values for computation.
