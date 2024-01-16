@@ -58,6 +58,16 @@ NormalCS <- R6::R6Class(
         if (length(weights) > k_max) {
           stop("Length of weights and lambdas exceed k_max.")
         }
+        stcp <- Stcp$new(
+          method = "ST",
+          family = "Normal",
+          alternative = alternative,
+          threshold = log(1 / alpha),
+          m_pre = 0,
+          weights = weights,
+          lambdas = lambdas,
+          k_max = k_max
+        )
       } else {
         base_param <- compute_baseline_for_sample_size(alpha,
                                                        n_upper,
@@ -65,18 +75,19 @@ NormalCS <- R6::R6Class(
                                                        generate_sub_G_fn(),
                                                        n_lower,
                                                        k_max)
-        weights <- base_param$omega
-        lambdas <- base_param$lambda
+        stcp <- Stcp$new(
+          method = "ST",
+          family = "Normal",
+          alternative = alternative,
+          threshold = log(1 / alpha),
+          m_pre = 0,
+          delta_lower = base_param$delta_lower,
+          delta_upper = base_param$delta_upper,
+          k_max = k_max
+        )
+        weights <- stcp$getWeights()
+        lambdas <- stcp$getLambdas()
       }
-      stcp <- Stcp$new(
-        method = "ST",
-        family = "Normal",
-        alternative = alternative,
-        threshold = log(1 / alpha),
-        m_pre = 0,
-        weights = weights,
-        lambdas = lambdas
-      )
       
       private$m_stcp <- stcp
       private$m_alternative <- alternative
@@ -118,7 +129,23 @@ NormalCS <- R6::R6Class(
     #' @param n Positive time.
     #' @param sig Standard deviation of the underlying normal distribution.
     computeWidth = function(n, sig = 1) {
-      #WIP
+      compute_gap_from_boundary <- function(mu){
+        private$m_stcp$reset()
+        # log value at x_bar = 0, n and mu.
+        log_value <- private$m_stcp$updateAndReturnHistoriesByAvgs(-mu, n)
+        return(log_value - private$m_stcp$getThreshold())
+      }
+      chernoff_width <- sqrt(2 * log(1/private$m_alpha) / n)
+      if (private$m_alternative == "greater") {
+        search_l <- -20 * chernoff_width
+        search_u <- -chernoff_width
+      } else {
+        search_l <- chernoff_width
+        search_u <- 20 * chernoff_width
+      }
+      boundary_search <- stats::uniroot(compute_gap_from_boundary,
+                                        c(search_l, search_u), tol = 1e-10)
+      return(sig * abs(boundary_search$root))
     },
     #' @description
     #' Compute a vector of two end points of confidence interval
@@ -128,7 +155,15 @@ NormalCS <- R6::R6Class(
     #' @param sig Standard deviation of the underlying normal distribution.
     #' @param x_bar The center of the confidence interval.
     computeInterval = function(n, x_bar = 0, sig = 1) {
-      #WIP
+      width <- self$computeWidth(n, sig)
+      if (private$m_alternative == "greater") {
+        interval_out <- c(x_bar - width, Inf)
+      } else if (private$m_alternative == "less") {
+        interval_out <- c(-Inf, x_bar + width)
+      } else {
+        interval_out <- c(x_bar - width, x_bar + width)
+      }
+      return(interval_out)
     }
   ),
   private = list(
