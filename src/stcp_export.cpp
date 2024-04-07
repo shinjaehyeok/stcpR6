@@ -1,8 +1,8 @@
 // stcp_export.cpp
 
-#include <Rcpp.h>
-
 #include "stcp_export.h"
+
+#include <Rcpp.h>
 
 RCPP_MODULE(HelperEx) {
   using namespace stcp;
