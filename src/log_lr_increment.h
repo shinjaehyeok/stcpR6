@@ -108,11 +108,11 @@ namespace stcp
         }
         double computeLogBaseValue(const double &x) override
         {
-            if (abs(x) < kEps)
+            if (std::abs(x) < kEps)
             {
                 return m_log_base_val_x_zero;
             }
-            else if (abs(x - 1.0) < kEps)
+            else if (std::abs(x - 1.0) < kEps)
             {
                 return m_log_base_val_x_one;
             }
@@ -157,11 +157,11 @@ namespace stcp
 
     inline double BerLR::computeMaxLLRBer(const double &p, const double &x_bar, const int &n)
     {
-        if (abs(x_bar) < kEps)
+        if (std::abs(x_bar) < kEps)
         {
             return n * (1 - x_bar) * log((1 - x_bar) / (1 - p));
         }
-        else if (abs(x_bar - 1.0) < kEps)
+        else if (std::abs(x_bar - 1.0) < kEps)
         {
             return n * x_bar * log(x_bar / p);
         }

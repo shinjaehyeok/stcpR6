@@ -100,11 +100,11 @@ namespace stcp
         }
         double computeLogBaseValue(const double &x) override
         {
-            if (abs(x) < kEps)
+            if (std::abs(x) < kEps)
             {
                 return m_log_base_val_x_zero;
             }
-            else if (abs(x - 1.0) < kEps)
+            else if (std::abs(x - 1.0) < kEps)
             {
                 return m_log_base_val_x_one;
             }
