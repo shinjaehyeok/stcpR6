@@ -2,3 +2,5 @@
 
 * Start to track updates via NEWS.md
 * Reflect minor Cpp header file updates
+* Add example for NormalCS class
+* Minor patch on NormalCS class implementation
