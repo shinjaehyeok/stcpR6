@@ -4,10 +4,20 @@
 \alias{NormalCS}
 \title{NormalCS Class}
 \description{
-NormalCS class is used to compute always-valid confidence sequence based on the STCP method.
+NormalCS class is used to compute always-valid confidence sequence
+for the standard normal process based on the STCP method.
 }
 \examples{
-# WIP
+# Initialize two-sided standard normal confidence sequence
+# optimized for the interval [10, 100]
+normal_cs <- NormalCS$new(
+  alternative = "two.sided",
+  alpha = 0.05,
+  n_upper = 100,
+  n_lower = 10
+  )
+# Compute confidence interval at n = 20 when observed sample mean = 0.5
+normal_cs$computeInterval(20, x_bar = 0.5)
 
 }
 \section{Methods}{
@@ -115,15 +125,13 @@ Return lambda parameters of mixture of e-values / e-detectors.
 \subsection{Method \code{computeWidth()}}{
 Compute the width of confidence interval at time n.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NormalCS$computeWidth(n, sig = 1)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{NormalCS$computeWidth(n)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{n}}{Positive time.}
-
-\item{\code{sig}}{Standard deviation of the underlying normal distribution.}
 }
 \if{html}{\out{</div>}}
 }
@@ -135,7 +143,7 @@ Compute the width of confidence interval at time n.
 Compute a vector of two end points of confidence interval
 at time n
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NormalCS$computeInterval(n, x_bar = 0, sig = 1)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{NormalCS$computeInterval(n, x_bar = 0)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -144,8 +152,6 @@ at time n
 \item{\code{n}}{Positive time.}
 
 \item{\code{x_bar}}{The center of the confidence interval.}
-
-\item{\code{sig}}{Standard deviation of the underlying normal distribution.}
 }
 \if{html}{\out{</div>}}
 }

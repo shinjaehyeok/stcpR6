@@ -1,13 +1,35 @@
 #' @title NormalCS Class
 #'
 #' @description
-#' NormalCS class is used to compute always-valid confidence sequence based on the STCP method.
+#' NormalCS class is used to compute always-valid confidence sequence
+#' for the standard normal process based on the STCP method.
 #'
 #' @export
 #' @importFrom R6 R6Class
 #' 
 #' @examples
-#' # WIP
+#' # Initialize two-sided standard normal confidence sequence
+#' # optimized for the interval [10, 100]
+#' normal_cs <- NormalCS$new(
+#'   alternative = "two.sided",
+#'   alpha = 0.05,
+#'   n_upper = 100,
+#'   n_lower = 10
+#'   )
+#'   
+#' # Compute confidence interval at n = 20 when observed sample mean = 0.5
+#' normal_cs$computeInterval(20, x_bar = 0.5)
+#' 
+#' # (Advanced) NormalCS supports general variance process.
+#' # Both n_upper and n_lower can be general positive numbers.
+#' normal_cs2 <- NormalCS$new(
+#'   alternative = "two.sided",
+#'   alpha = 0.05,
+#'   n_upper = 100.5,
+#'   n_lower = 10.5
+#'   )
+#' # Confidence interval at n = 20.5
+#' normal_cs$computeInterval(20.5, x_bar = 0.5)
 #' 
 NormalCS <- R6::R6Class(
   "NormalCS",
@@ -127,8 +149,7 @@ NormalCS <- R6::R6Class(
     #' Compute the width of confidence interval at time n.
     #' 
     #' @param n Positive time.
-    #' @param sig Standard deviation of the underlying normal distribution.
-    computeWidth = function(n, sig = 1) {
+    computeWidth = function(n) {
       compute_gap_from_boundary <- function(mu){
         private$m_stcp$reset()
         # log value at x_bar = 0, n and mu.
@@ -145,17 +166,16 @@ NormalCS <- R6::R6Class(
       }
       boundary_search <- stats::uniroot(compute_gap_from_boundary,
                                         c(search_l, search_u), tol = 1e-10)
-      return(sig * abs(boundary_search$root))
+      return(abs(boundary_search$root))
     },
     #' @description
     #' Compute a vector of two end points of confidence interval
     #' at time n 
     #' 
     #' @param n Positive time.
-    #' @param sig Standard deviation of the underlying normal distribution.
     #' @param x_bar The center of the confidence interval.
-    computeInterval = function(n, x_bar = 0, sig = 1) {
-      width <- self$computeWidth(n, sig)
+    computeInterval = function(n, x_bar = 0) {
+      width <- self$computeWidth(n)
       if (private$m_alternative == "greater") {
         interval_out <- c(x_bar - width, Inf)
       } else if (private$m_alternative == "less") {
