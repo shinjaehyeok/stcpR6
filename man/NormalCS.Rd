@@ -16,8 +16,20 @@ normal_cs <- NormalCS$new(
   n_upper = 100,
   n_lower = 10
   )
+  
 # Compute confidence interval at n = 20 when observed sample mean = 0.5
 normal_cs$computeInterval(20, x_bar = 0.5)
+
+# (Advanced) NormalCS supports general variance process.
+# Both n_upper and n_lower can be general positive numbers.
+normal_cs2 <- NormalCS$new(
+  alternative = "two.sided",
+  alpha = 0.05,
+  n_upper = 100.5,
+  n_lower = 10.5
+  )
+# Confidence interval at n = 20.5
+normal_cs$computeInterval(20.5, x_bar = 0.5)
 
 }
 \section{Methods}{

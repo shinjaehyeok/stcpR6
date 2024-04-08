@@ -1,5 +1,5 @@
 Package: stcpR6
-Title: Sequential Test and Change-Point detection algorithms based on E-values / E-detectors
+Title: Sequential Test and Change-Point Detection Algorithms Based on E-values / E-detectors
 Version: 0.9.6
 Authors@R: 
     person(given = "Jaehyeok",
@@ -7,10 +7,11 @@ Authors@R:
            role = c("aut", "cre"),
            email = "shinjaehyeok@gmail.com",
            comment = c(ORCID = "0000-0003-0464-915X"))
-Description: An implementation of sequential tests and online change-point
-  detection algorithms. This package supports 
-  APIs of nonparametric sequential test and online change-point detection for 
-  streams of univariate (sub-)Gaussian, binary, and bounded random variables.
+Description: Algorithms of nonparametric sequential test and online 
+  change-point detection for streams of univariate (sub-)Gaussian, binary, 
+  and bounded random variables, introduced in following publications.
+  * J. Shin, A. Ramdas, A. Rinaldo (2024) <arXiv:2203.03532>.
+  * J. Shin, A. Ramdas, A. Rinaldo (2021) <arXiv:2010.08082>.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

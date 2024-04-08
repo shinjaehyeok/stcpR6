@@ -4,9 +4,9 @@
 \name{stcpR6-package}
 \alias{stcpR6}
 \alias{stcpR6-package}
-\title{stcpR6: Sequential Test and Change-Point detection algorithms based on E-values / E-detectors}
+\title{stcpR6: Sequential Test and Change-Point Detection Algorithms Based on E-values / E-detectors}
 \description{
-An implementation of sequential tests and online change-point detection algorithms. This package supports APIs of nonparametric sequential test and online change-point detection for streams of univariate (sub-)Gaussian, binary, and bounded random variables.
+Algorithms of nonparametric sequential test and online change-point detection for streams of univariate (sub-)Gaussian, binary, and bounded random variables, introduced in following publications. * J. Shin, A. Ramdas, A. Rinaldo (2024) \href{https://arxiv.org/abs/2203.03532}{arXiv:2203.03532}. * J. Shin, A. Ramdas, A. Rinaldo (2021) \href{https://arxiv.org/abs/2010.08082}{arXiv:2010.08082}.
 }
 \seealso{
 Useful links:
