@@ -6,6 +6,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/shinjaehyeok/stcpR6/workflows/R-CMD-check/badge.svg)](https://github.com/shinjaehyeok/stcpR6/actions)
+[![R-CMD-check](https://github.com/shinjaehyeok/stcpR6/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/shinjaehyeok/stcpR6/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 stcpR6 is an R package built to run nonparametric sequential tests and
@@ -25,7 +26,13 @@ errors or omissions in this package.
 
 ## Installation
 
-You can install the development version of stcpR6 from
+You can install the CRAN version of stcpR6 with:
+
+``` r
+install.packages("stcpR6")
+```
+
+You can also install the development version of stcpR6 from
 [GitHub](https://github.com/) with:
 
 ``` r

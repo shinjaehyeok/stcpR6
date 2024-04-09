@@ -32,7 +32,13 @@ Disclaimer: This R package is a personal project and is not affiliated with my c
 
 ## Installation
 
-You can install the development version of stcpR6 from [GitHub](https://github.com/) with:
+You can install the CRAN version of stcpR6 with:
+
+``` r
+install.packages("stcpR6")
+```
+
+You can also install the development version of stcpR6 from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
