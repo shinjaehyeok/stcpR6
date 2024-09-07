@@ -58,4 +58,5 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 
-
+# ETC
+CRAN-SUBMISSION
