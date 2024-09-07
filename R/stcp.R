@@ -175,68 +175,6 @@ Stcp <- R6::R6Class(
       }
       
       # Initialize stcp for non-GLR methods
-      # Check input requirements for each method
-      
-      if (delta_lower <= 0 && method != "GLRCU") {
-        stop("delta_lower must be positive.")
-      }
-      
-      # Check delta_lower is within boundary for Ber and Bounded cases
-      # For Ber, post-change parameter must be strictly within (0,1)
-      # For Bounded case, post-change parameter can include 0 or 1.
-      if (family == "Ber") {
-        if (alternative != "less") {
-          if (m_pre + delta_lower >= 1) {
-            stop(
-              "The minimum of alternative / post-change parameter (m_pre + delta_lower) is greater than or equal to 1."
-            )
-          }
-        }
-        if (alternative != "greater") {
-          if (m_pre - delta_lower <= 0) {
-            stop(
-              "The maximum of alternative / post-change parameter (m_pre - delta_lower) is less than or equal to 0."
-            )
-          }
-        }
-      } else if (family == "Bounded") {
-        if (alternative == "two.sided") {
-          # Note if alternative == "greater", bounded method technically does not require the upper bound 1.
-          if (m_pre + delta_lower > 1) {
-            stop(
-              "The minimum of alternative / post-change parameter (m_pre + delta_lower) is greater than 1."
-            )
-          }
-        }
-        if (alternative != "greater") {
-          if (m_pre - delta_lower < 0) {
-            stop(
-              "The maximum of alternative / post-change parameter (m_pre - delta_lower) is less than 0."
-            )
-          }
-        }
-      }
-      
-      if (is.null(delta_upper)) {
-        # If delta_upper is NULL, we pick a reasonably large one
-        if (family == "Normal") {
-          delta_upper_ <- 5
-        } else {
-          if (alternative == "greater") {
-            delta_upper_ <- 1 - m_pre - 0.001
-          } else if (alternative == "less") {
-            delta_upper_ <- m_pre - 0.001
-          } else {
-            delta_upper_ <- min(1 - m_pre, m_pre) - 0.001
-          }
-        }
-        
-        delta_upper <- max(delta_lower, delta_upper_)
-        
-      } else if (delta_upper <  delta_lower) {
-        stop("If not NULL, delta_upper must be greater than or equal to delta_lower.")
-      }
-      
       if (family == "Bounded") {
         # Bounded family uses sub-E class internally
         # So we convert it into the sub-E space.
@@ -255,7 +193,6 @@ Stcp <- R6::R6Class(
         delta_lower_internal_less <- delta_lower
         delta_upper_internal_less <- delta_upper
       }
-      
       
       # Load psi_fn list
       if (family == "Normal") {
