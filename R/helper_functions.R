@@ -178,10 +178,13 @@ convertDeltaToExpParams <- function(family,
                                     delta_upper,
                                     k_max) {
   alpha <- exp(-threshold)
+  # Get an internal delta range.
   if (family == "Bounded") {
     # Bounded family uses sub-E class internally
     # So we convert it into the sub-E space.
     # where delta_E = m * delta / (sigma^2 + delta^2)
+    # Note delta_E DEPENDS ON null / pre-change parameter m
+    # Therefore, we need to flip (1-m) for "less" alternative condition
     delta_lower_internal_greater <-
       m_pre * delta_lower / (0.25 + delta_upper ^ 2)
     delta_upper_internal_greater <-
@@ -190,22 +193,28 @@ convertDeltaToExpParams <- function(family,
       (1 - m_pre) * delta_lower / (0.25 + delta_upper ^ 2)
     delta_upper_internal_less <-
       (1 - m_pre) * delta_upper / delta_lower ^ 2
-  } else {
+  } else if (family == "Normal" || family == "Ber") {
+    # For Normal and Ber family, we use the corresponding sub-G and sub-B space
+    # So internal delta range for both alternatives remains the same.
     delta_lower_internal_greater <- delta_lower
     delta_upper_internal_greater <- delta_upper
     delta_lower_internal_less <- delta_lower
     delta_upper_internal_less <- delta_upper
+  } else {
+    stop("Unsupported family for delta parameter conversion")
   }
   
-  # Load psi_fn list
+  # Load sub-psi help functions
   if (family == "Normal") {
-    psi_fn_list <- generate_sub_G_fn(1)
+    # We only support sig = 1 case. But user can scale the input if needed.
+    psi_fn_list_greater <- generate_sub_G_fn(1)
     psi_fn_list_less <- generate_sub_G_fn(1)
   } else if (family == "Ber") {
-    psi_fn_list <- generate_sub_B_fn(m_pre)
+    # Note sub-B functions depend on null / pre-change parameter.
+    psi_fn_list_greater <- generate_sub_B_fn(m_pre)
     psi_fn_list_less <- generate_sub_B_fn(1 - m_pre)
   } else if (family == "Bounded") {
-    psi_fn_list <- generate_sub_E_fn()
+    psi_fn_list_greater <- generate_sub_E_fn()
     psi_fn_list_less <- generate_sub_E_fn()
   }
   
@@ -215,7 +224,7 @@ convertDeltaToExpParams <- function(family,
       alpha,
       delta_lower_internal_greater,
       delta_upper_internal_greater,
-      psi_fn_list,
+      psi_fn_list_greater,
       1,
       k_max
     )
@@ -232,16 +241,25 @@ convertDeltaToExpParams <- function(family,
     )
     weights <- base_param_less$omega
     if (family == "Normal" || family == "Ber") {
+      # We need to flip lambdas for "less" alternative
+      # For example, for Ber class, we can show
+      # lambda * (1-X) - log(p + (1-p) * exp(lambda)) is equal to
+      # -lambda * X - log(1-p + p * exp(-lambda))
       lambdas <- -base_param_less$lambda
     } else if (family == "Bounded") {
+      # For the Bounded family, flipping is a bit non-trivial
+      # This is because bounded family is based on following baseline
+      # lambda * (1 + obs / m), which relies on the RATIO of obs over m
+      # We can show 1 + lambda * ((1-X) / (1-m) - 1) is equal to
+      # 1 - m / (1-m) * lambda (X / m - 1)
       lambdas <- -m_pre * base_param_less$lambda / (1 - m_pre)
     }
-  } else {
+  } else if (alternative == "two.sided"){
     base_param <- compute_baseline(
       alpha,
       delta_lower_internal_greater,
       delta_upper_internal_greater,
-      psi_fn_list,
+      psi_fn_list_greater,
       1,
       k_max
     )
@@ -262,6 +280,8 @@ convertDeltaToExpParams <- function(family,
         c(base_param$lambda,
           -m_pre * base_param_less$lambda / (1 - m_pre))
     }
+  } else {
+    stop("Unsupported alternative for exponential baseline methods")
   }
   return(list(lambdas = lambdas, weights = weights))
 }
