@@ -129,14 +129,6 @@ Stcp <- R6::R6Class(
       }
       alpha <- exp(-threshold)
       
-      delta_check_output <- checkDeltaRange(method, family, alternative, m_pre, delta_lower, delta_upper)
-      
-      if (delta_check_output$is_acceptable) {
-        delta_upper <- delta_check_output$delta_upper
-      } else {
-        stop(delta_check_output$error_message)
-      }
-      
       # Initialize stcp for GLRCU method
       # If method = GLRCU, we do not use delta_lower and delta_upper
       if (method == "GLRCU") {
@@ -182,6 +174,15 @@ Stcp <- R6::R6Class(
             }
           }
         } else {
+          # Check whether delta parameters are in an expected range
+          delta_check_output <- checkDeltaRange(method, family, alternative, m_pre, delta_lower, delta_upper)
+          if (delta_check_output$is_acceptable) {
+            delta_upper <- delta_check_output$delta_upper
+          } else {
+            stop(delta_check_output$error_message)
+          }
+          # Convert delta parameters into exponential baseline ones.
+          # Note this conversion is method agnostic.
           exp_params <- convertDeltaToExpParams(family,
                                                 alternative,
                                                 threshold,
