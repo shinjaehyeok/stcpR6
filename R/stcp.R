@@ -7,7 +7,7 @@
 #'
 #' @export
 #' @importFrom R6 R6Class
-#' 
+#'
 #' @examples
 #' # Sequential Normal mean test H0: mu <= 0
 #' # Initialize stcp object for this test.
@@ -16,53 +16,53 @@
 #'                  alternative = "greater",
 #'                  threshold = log(1 / 0.05),
 #'                  m_pre = 0)
-#'                  
+#'
 #' # Update the observations
-#' obs <- c(1.0, 3.0, 2.0)            
+#' obs <- c(1.0, 3.0, 2.0)
 #' stcp$updateLogValuesUntilStop(obs)
-#' 
+#'
 #' # Check whether the sequential test is stopped
 #' stcp$isStopped() # TRUE
-#' 
+#'
 #' # Check when the test was stopped
 #' stcp$getStoppedTime() # 3
-#' 
+#'
 #' # Although the number of obervaions was 4, the test was stopped at 3.
 #' stcp$getTime() # 3
-#' 
+#'
 #' # Get the log value of the mixutre of e-values at the current time (3)
 #' stcp$getLogValue() # 4.425555
-#' 
+#'
 #' # ...which is higher than the threshold log(1 / 0.05) ~ 2.996
 #' stcp$getThreshold() # 2.995732
-#' 
+#'
 #' # Reset the test object
 #' stcp$reset()
-#' 
+#'
 #' # Rerun the test but, at this time, we track updated log values
-#' log_values <- stcp$updateAndReturnHistories(obs) 
+#' log_values <- stcp$updateAndReturnHistories(obs)
 #' print(log_values) # 0.1159777 2.7002207 4.4255551 1.9746508
-#' 
+#'
 #' # Again, the test was stopped at 3rd observation
 #' stcp$getStoppedTime() # 3
-#' 
+#'
 #' # But, at this time, log values were evaluated until the 4th observation.
 #' stcp$getTime() # 4
-#' 
+#'
 #' # Print overall summary
 #' stcp # or stcp$print() or print(stcp)
 #' # stcp Model:
-#' #   - Method:  ST 
-#' # - Family:  Normal 
-#' # - Alternative:  greater 
-#' # - Alpha:  0.05 
-#' # - m_pre:  0 
-#' # - Num. of mixing components:  55 
-#' # - Obs. have been passed:  4 
-#' # - Current log value:  1.974651 
-#' # - Is stopped before:  TRUE 
-#' # - Stopped time:  3 
-#' 
+#' #   - Method:  ST
+#' # - Family:  Normal
+#' # - Alternative:  greater
+#' # - Alpha:  0.05
+#' # - m_pre:  0
+#' # - Num. of mixing components:  55
+#' # - Obs. have been passed:  4
+#' # - Current log value:  1.974651
+#' # - Is stopped before:  TRUE
+#' # - Stopped time:  3
+#'
 Stcp <- R6::R6Class(
   "Stcp",
   public = list(
@@ -108,7 +108,7 @@ Stcp <- R6::R6Class(
     #' For GLRCU method, it is used as the lookup window size for GLRCU statistics.
     #'
     #' @return A new `Stcp` object.
-    #' 
+    #'
     initialize = function(method = c("ST", "SR", "CU", "GLRCU"),
                           family = c("Normal", "Ber", "Bounded"),
                           alternative = c("two.sided", "greater", "less"),
@@ -134,35 +134,19 @@ Stcp <- R6::R6Class(
       if (method == "GLRCU") {
         if (family == "Normal") {
           if (alternative == "two.sided") {
-            private$m_stcpCpp <- GLRCUNormal$new(threshold,
-                                                 m_pre,
-                                                 1,
-                                                 k_max)
+            private$m_stcpCpp <- GLRCUNormal$new(threshold, m_pre, 1, k_max)
           } else if (alternative == "greater") {
-            private$m_stcpCpp <- GLRCUNormalGreater$new(threshold,
-                                                        m_pre,
-                                                        1,
-                                                        k_max)
+            private$m_stcpCpp <- GLRCUNormalGreater$new(threshold, m_pre, 1, k_max)
           } else {
-            private$m_stcpCpp <- GLRCUNormalLess$new(threshold,
-                                                     m_pre,
-                                                     1,
-                                                     k_max)
+            private$m_stcpCpp <- GLRCUNormalLess$new(threshold, m_pre, 1, k_max)
           }
         } else if (family == "Ber") {
           if (alternative == "two.sided") {
-            private$m_stcpCpp <- GLRCUBer$new(threshold,
-                                              m_pre,
-                                              k_max)
-            
+            private$m_stcpCpp <- GLRCUBer$new(threshold, m_pre, k_max)
           } else if (alternative == "greater") {
-            private$m_stcpCpp <- GLRCUBerGreater$new(threshold,
-                                                     m_pre,
-                                                     k_max)
+            private$m_stcpCpp <- GLRCUBerGreater$new(threshold, m_pre, k_max)
           } else {
-            private$m_stcpCpp <- GLRCUBerLess$new(threshold,
-                                                  m_pre,
-                                                  k_max)
+            private$m_stcpCpp <- GLRCUBerLess$new(threshold, m_pre, k_max)
           }
         } else {
           stop("Unsupported family for GLRCU method")
@@ -170,219 +154,193 @@ Stcp <- R6::R6Class(
         delta_lower <- 0
         weights <- NULL
         lambdas <- NULL
-      } else {
-        if (delta_lower <= 0 && method != "GLRCU") {
-          stop("delta_lower must be positive.")
-        }
         
-        # Check delta_lower is within boundary for Ber and Bounded cases
-        # For Ber, post-change parameter must be strictly within (0,1)
-        # For Bounded case, post-change parameter can include 0 or 1.
-        if (family == "Ber") {
-          if (alternative != "less") {
-            if (m_pre + delta_lower >= 1) {
-              stop(
-                "The minimum of alternative / post-change parameter (m_pre + delta_lower) is greater than or equal to 1."
-              )
-            }
-          }
-          if (alternative != "greater") {
-            if (m_pre - delta_lower <= 0) {
-              stop(
-                "The maximum of alternative / post-change parameter (m_pre - delta_lower) is less than or equal to 0."
-              )
-            }
-          }
-        } else if (family == "Bounded") {
-          if (alternative == "two.sided") {
-            # Note if alternative == "greater", bounded method technically does not require the upper bound 1.
-            if (m_pre + delta_lower > 1) {
-              stop(
-                "The minimum of alternative / post-change parameter (m_pre + delta_lower) is greater than 1."
-              )
-            }
-          }
-          if (alternative != "greater") {
-            if (m_pre - delta_lower < 0) {
-              stop(
-                "The maximum of alternative / post-change parameter (m_pre - delta_lower) is less than 0."
-              )
-            }
+        return()
+      }
+      
+      if (delta_lower <= 0 && method != "GLRCU") {
+        stop("delta_lower must be positive.")
+      }
+      
+      # Check delta_lower is within boundary for Ber and Bounded cases
+      # For Ber, post-change parameter must be strictly within (0,1)
+      # For Bounded case, post-change parameter can include 0 or 1.
+      if (family == "Ber") {
+        if (alternative != "less") {
+          if (m_pre + delta_lower >= 1) {
+            stop(
+              "The minimum of alternative / post-change parameter (m_pre + delta_lower) is greater than or equal to 1."
+            )
           }
         }
-        
-        if (is.null(delta_upper)) {
-          # If delta_upper is NULL, we pick a reasonably large one
-          if (family == "Normal") {
-            delta_upper_ <- 5
-          } else {
-            if (alternative == "greater") {
-              delta_upper_ <- 1 - m_pre - 0.001
-            } else if (alternative == "less") {
-              delta_upper_ <- m_pre - 0.001
-            } else {
-              delta_upper_ <- min(1 - m_pre, m_pre) - 0.001
-            }
+        if (alternative != "greater") {
+          if (m_pre - delta_lower <= 0) {
+            stop(
+              "The maximum of alternative / post-change parameter (m_pre - delta_lower) is less than or equal to 0."
+            )
           }
-          
-          delta_upper <- max(delta_lower, delta_upper_)
-          
-        } else if (delta_upper <  delta_lower) {
-          stop("If not NULL, delta_upper must be greater than or equal to delta_lower.")
         }
-        
-        if (family == "Bounded") {
-          # Bounded family uses sub-E class internally
-          # So we convert it into the sub-E space.
-          # where delta_E = m * delta / (sigma^2 + delta^2)
-          delta_lower_internal_greater <-
-            m_pre * delta_lower / (0.25 + delta_upper ^ 2)
-          delta_upper_internal_greater <-
-            m_pre * delta_upper / delta_lower ^ 2
-          delta_lower_internal_less <-
-            (1 - m_pre) * delta_lower / (0.25 + delta_upper ^ 2)
-          delta_upper_internal_less <-
-            (1 - m_pre) * delta_upper / delta_lower ^ 2
-        } else {
-          delta_lower_internal_greater <- delta_lower
-          delta_upper_internal_greater <- delta_upper
-          delta_lower_internal_less <- delta_lower
-          delta_upper_internal_less <- delta_upper
+      } else if (family == "Bounded") {
+        if (alternative == "two.sided") {
+          # Note if alternative == "greater", bounded method technically does not require the upper bound 1.
+          if (m_pre + delta_lower > 1) {
+            stop(
+              "The minimum of alternative / post-change parameter (m_pre + delta_lower) is greater than 1."
+            )
+          }
         }
-        
-        
-        # Load psi_fn list
+        if (alternative != "greater") {
+          if (m_pre - delta_lower < 0) {
+            stop(
+              "The maximum of alternative / post-change parameter (m_pre - delta_lower) is less than 0."
+            )
+          }
+        }
+      }
+      
+      if (is.null(delta_upper)) {
+        # If delta_upper is NULL, we pick a reasonably large one
         if (family == "Normal") {
-          psi_fn_list <- generate_sub_G_fn(1)
-          psi_fn_list_less <- generate_sub_G_fn(1)
-        } else if (family == "Ber") {
-          psi_fn_list <- generate_sub_B_fn(m_pre)
-          psi_fn_list_less <- generate_sub_B_fn(1 - m_pre)
-        } else if (family == "Bounded") {
-          psi_fn_list <- generate_sub_E_fn()
-          psi_fn_list_less <- generate_sub_E_fn()
-        }
-        
-        # Compute weights and lambdas parameters
-        if (!is.null(weights) & !is.null(lambdas)) {
-          if (length(weights) != length(lambdas)) {
-            stop("Lengths of weights and lambdas are not same.")
-          }
-          if (length(weights) > k_max) {
-            stop("Length of weights and lambdas exceed k_max.")
-          }
+          delta_upper_ <- 5
         } else {
           if (alternative == "greater") {
-            base_param <- compute_baseline(alpha,
-                                           delta_lower_internal_greater,
-                                           delta_upper_internal_greater,
-                                           psi_fn_list,
-                                           1,
-                                           k_max)
-            weights <- base_param$omega
-            lambdas <- base_param$lambda
+            delta_upper_ <- 1 - m_pre - 0.001
           } else if (alternative == "less") {
-            base_param_less <- compute_baseline(
-              alpha,
-              delta_lower_internal_less,
-              delta_upper_internal_less,
-              psi_fn_list_less,
-              1,
-              k_max
-            )
-            weights <- base_param_less$omega
-            if (family == "Normal" || family == "Ber") {
-              lambdas <- -base_param_less$lambda
-            } else if (family == "Bounded") {
-              lambdas <- -m_pre * base_param_less$lambda / (1 - m_pre)
-            }
+            delta_upper_ <- m_pre - 0.001
           } else {
-            base_param <- compute_baseline(alpha,
-                                           delta_lower_internal_greater,
-                                           delta_upper_internal_greater,
-                                           psi_fn_list,
-                                           1,
-                                           k_max)
-            base_param_less <- compute_baseline(
-              alpha,
-              delta_lower_internal_less,
-              delta_upper_internal_less,
-              psi_fn_list_less,
-              1,
-              k_max
-            )
-            weights <-
-              c(base_param$omega / 2, base_param_less$omega / 2)
-            if (family == "Normal" || family == "Ber") {
-              lambdas <- c(base_param$lambda,-base_param_less$lambda)
-            } else if (family == "Bounded") {
-              lambdas <-
-                c(base_param$lambda,
-                  -m_pre * base_param_less$lambda / (1 - m_pre))
-            }
+            delta_upper_ <- min(1 - m_pre, m_pre) - 0.001
           }
-          
         }
         
+        delta_upper <- max(delta_lower, delta_upper_)
         
-        # Initialize stcp Cpp-object
-        if (family == "Normal") {
-          if (method == "ST") {
-            private$m_stcpCpp <- StcpMixESTNormal$new(threshold,
-                                                      weights,
-                                                      lambdas,
-                                                      m_pre,
-                                                      1)
-          } else if (method == "SR") {
-            private$m_stcpCpp <- StcpMixESRNormal$new(threshold,
-                                                      weights,
-                                                      lambdas,
-                                                      m_pre,
-                                                      1)
-            
-            
-          } else if (method == "CU") {
-            private$m_stcpCpp <- StcpMixECUNormal$new(threshold,
-                                                      weights,
-                                                      lambdas,
-                                                      m_pre,
-                                                      1)
-            
+      } else if (delta_upper <  delta_lower) {
+        stop("If not NULL, delta_upper must be greater than or equal to delta_lower.")
+      }
+      
+      if (family == "Bounded") {
+        # Bounded family uses sub-E class internally
+        # So we convert it into the sub-E space.
+        # where delta_E = m * delta / (sigma^2 + delta^2)
+        delta_lower_internal_greater <-
+          m_pre * delta_lower / (0.25 + delta_upper ^ 2)
+        delta_upper_internal_greater <-
+          m_pre * delta_upper / delta_lower ^ 2
+        delta_lower_internal_less <-
+          (1 - m_pre) * delta_lower / (0.25 + delta_upper ^ 2)
+        delta_upper_internal_less <-
+          (1 - m_pre) * delta_upper / delta_lower ^ 2
+      } else {
+        delta_lower_internal_greater <- delta_lower
+        delta_upper_internal_greater <- delta_upper
+        delta_lower_internal_less <- delta_lower
+        delta_upper_internal_less <- delta_upper
+      }
+      
+      
+      # Load psi_fn list
+      if (family == "Normal") {
+        psi_fn_list <- generate_sub_G_fn(1)
+        psi_fn_list_less <- generate_sub_G_fn(1)
+      } else if (family == "Ber") {
+        psi_fn_list <- generate_sub_B_fn(m_pre)
+        psi_fn_list_less <- generate_sub_B_fn(1 - m_pre)
+      } else if (family == "Bounded") {
+        psi_fn_list <- generate_sub_E_fn()
+        psi_fn_list_less <- generate_sub_E_fn()
+      }
+      
+      # Compute weights and lambdas parameters
+      if (!is.null(weights) & !is.null(lambdas)) {
+        if (length(weights) != length(lambdas)) {
+          stop("Lengths of weights and lambdas are not same.")
+        }
+        if (length(weights) > k_max) {
+          stop("Length of weights and lambdas exceed k_max.")
+        }
+      } else {
+        if (alternative == "greater") {
+          base_param <- compute_baseline(
+            alpha,
+            delta_lower_internal_greater,
+            delta_upper_internal_greater,
+            psi_fn_list,
+            1,
+            k_max
+          )
+          weights <- base_param$omega
+          lambdas <- base_param$lambda
+        } else if (alternative == "less") {
+          base_param_less <- compute_baseline(
+            alpha,
+            delta_lower_internal_less,
+            delta_upper_internal_less,
+            psi_fn_list_less,
+            1,
+            k_max
+          )
+          weights <- base_param_less$omega
+          if (family == "Normal" || family == "Ber") {
+            lambdas <- -base_param_less$lambda
+          } else if (family == "Bounded") {
+            lambdas <- -m_pre * base_param_less$lambda / (1 - m_pre)
           }
-        } else if (family == "Ber") {
-          if (method == "ST") {
-            private$m_stcpCpp <- StcpMixESTBer$new(threshold,
-                                                   weights,
-                                                   lambdas,
-                                                   m_pre)
-          } else if (method == "SR") {
-            private$m_stcpCpp <- StcpMixESRBer$new(threshold,
-                                                   weights,
-                                                   lambdas,
-                                                   m_pre)
-          } else if (method == "CU") {
-            private$m_stcpCpp <- StcpMixECUBer$new(threshold,
-                                                   weights,
-                                                   lambdas,
-                                                   m_pre)
+        } else {
+          base_param <- compute_baseline(
+            alpha,
+            delta_lower_internal_greater,
+            delta_upper_internal_greater,
+            psi_fn_list,
+            1,
+            k_max
+          )
+          base_param_less <- compute_baseline(
+            alpha,
+            delta_lower_internal_less,
+            delta_upper_internal_less,
+            psi_fn_list_less,
+            1,
+            k_max
+          )
+          weights <-
+            c(base_param$omega / 2, base_param_less$omega / 2)
+          if (family == "Normal" || family == "Ber") {
+            lambdas <- c(base_param$lambda, -base_param_less$lambda)
+          } else if (family == "Bounded") {
+            lambdas <-
+              c(base_param$lambda,-m_pre * base_param_less$lambda / (1 - m_pre))
           }
-        } else if (family == "Bounded") {
-          if (method == "ST") {
-            private$m_stcpCpp <- StcpMixESTBounded$new(threshold,
-                                                       weights,
-                                                       lambdas,
-                                                       m_pre)
-          } else if (method == "SR") {
-            private$m_stcpCpp <- StcpMixESRBounded$new(threshold,
-                                                       weights,
-                                                       lambdas,
-                                                       m_pre)
-          } else if (method == "CU") {
-            private$m_stcpCpp <- StcpMixECUBounded$new(threshold,
-                                                       weights,
-                                                       lambdas,
-                                                       m_pre)
-          }
+        }
+        
+      }
+      
+      # Initialize stcp Cpp-object
+      if (family == "Normal") {
+        if (method == "ST") {
+          private$m_stcpCpp <- StcpMixESTNormal$new(threshold, weights, lambdas, m_pre, 1)
+        } else if (method == "SR") {
+          private$m_stcpCpp <- StcpMixESRNormal$new(threshold, weights, lambdas, m_pre, 1)
+          
+          
+        } else if (method == "CU") {
+          private$m_stcpCpp <- StcpMixECUNormal$new(threshold, weights, lambdas, m_pre, 1)
+          
+        }
+      } else if (family == "Ber") {
+        if (method == "ST") {
+          private$m_stcpCpp <- StcpMixESTBer$new(threshold, weights, lambdas, m_pre)
+        } else if (method == "SR") {
+          private$m_stcpCpp <- StcpMixESRBer$new(threshold, weights, lambdas, m_pre)
+        } else if (method == "CU") {
+          private$m_stcpCpp <- StcpMixECUBer$new(threshold, weights, lambdas, m_pre)
+        }
+      } else if (family == "Bounded") {
+        if (method == "ST") {
+          private$m_stcpCpp <- StcpMixESTBounded$new(threshold, weights, lambdas, m_pre)
+        } else if (method == "SR") {
+          private$m_stcpCpp <- StcpMixESRBounded$new(threshold, weights, lambdas, m_pre)
+        } else if (method == "CU") {
+          private$m_stcpCpp <- StcpMixECUBounded$new(threshold, weights, lambdas, m_pre)
         }
       }
       private$m_method <- method
@@ -457,39 +415,39 @@ Stcp <- R6::R6Class(
     },
     #' @description
     #' Update the log value and related fields by passing a vector of observations.
-    #' 
+    #'
     #' @param xs A numeric vector of observations.
     updateLogValues = function(xs) {
       private$m_stcpCpp$updateLogValues(xs)
     },
     #' @description
     #' Update the log value and related fields until the log value is crossing the boundary.
-    #' 
+    #'
     #' @param xs A numeric vector of observations.
     updateLogValuesUntilStop = function(xs) {
       private$m_stcpCpp$updateLogValuesUntilStop(xs)
     },
     #' @description
     #' Update the log value and related fields then return updated log values by passing a vector of observations.
-    #' 
+    #'
     #' @param xs A numeric vector of observations.
     updateAndReturnHistories = function(xs) {
       private$m_stcpCpp$updateAndReturnHistories(xs)
     },
     #' @description
-    #' Update the log value and related fields by passing 
+    #' Update the log value and related fields by passing
     #' a vector of averages and number of corresponding samples.
-    #' 
+    #'
     #' @param x_bars A numeric vector of averages.
     #' @param ns A numeric vector of sample sizes.
     updateLogValuesByAvgs = function(x_bars, ns) {
       private$m_stcpCpp$updateLogValuesByAvgs(x_bars, ns)
     },
     #' @description
-    #' Update the log value and related fields by passing 
+    #' Update the log value and related fields by passing
     #' a vector of averages and number of corresponding samples
     #' until the log value is crossing the boundary.
-    #' 
+    #'
     #' @param x_bars A numeric vector of averages.
     #' @param ns A numeric vector of sample sizes.
     updateLogValuesUntilStopByAvgs = function(x_bars, ns) {
@@ -498,7 +456,7 @@ Stcp <- R6::R6Class(
     #' @description
     #' Update the log value and related fields then return updated log values
     #' a vector of averages and number of corresponding samples.
-    #' 
+    #'
     #' @param x_bars A numeric vector of averages.
     #' @param ns A numeric vector of sample sizes.
     updateAndReturnHistoriesByAvgs = function(x_bars, ns) {
