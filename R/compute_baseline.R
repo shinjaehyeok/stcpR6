@@ -55,7 +55,7 @@ compute_baseline <- function(alpha,
   
   # If delta_lower is small enough or equal to delta_upper
   # Return trivial single baseline
-  if (log_one_over_alpha <= v_min * d_l |
+  if (log_one_over_alpha <= v_min * d_l ||
       delta_lower == delta_upper) {
     baseline_list <- list(
       alpha = alpha,
@@ -182,7 +182,7 @@ compute_baseline_for_sample_size <- function(alpha,
                                              v_min = 1,
                                              k_max = 200,
                                              tol = 1e-10) {
-  if (!(v_lower > 0 & v_upper >=  v_lower)) {
+  if (!(v_lower > 0 && v_upper >=  v_lower)) {
     stop("v_lower and v_upper must be positive with v_lower <= v_upper.")
   }
   

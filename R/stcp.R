@@ -130,14 +130,7 @@ Stcp <- R6::R6Class(
       
       alpha <- exp(-threshold)
       
-      delta_check_output <- checkDeltaRange(
-        method,
-        family,
-        alternative,
-        m_pre,
-        delta_lower,
-        delta_upper
-      )
+      delta_check_output <- checkDeltaRange(method, family, alternative, m_pre, delta_lower, delta_upper)
       
       if (delta_check_output$is_acceptable) {
         delta_upper <- delta_check_output$delta_upper
@@ -175,99 +168,32 @@ Stcp <- R6::R6Class(
       }
       
       # Initialize stcp for non-GLR methods
-      if (family == "Bounded") {
-        # Bounded family uses sub-E class internally
-        # So we convert it into the sub-E space.
-        # where delta_E = m * delta / (sigma^2 + delta^2)
-        delta_lower_internal_greater <-
-          m_pre * delta_lower / (0.25 + delta_upper ^ 2)
-        delta_upper_internal_greater <-
-          m_pre * delta_upper / delta_lower ^ 2
-        delta_lower_internal_less <-
-          (1 - m_pre) * delta_lower / (0.25 + delta_upper ^ 2)
-        delta_upper_internal_less <-
-          (1 - m_pre) * delta_upper / delta_lower ^ 2
-      } else {
-        delta_lower_internal_greater <- delta_lower
-        delta_upper_internal_greater <- delta_upper
-        delta_lower_internal_less <- delta_lower
-        delta_upper_internal_less <- delta_upper
-      }
+      # If input weights or lamdas is empty then
+      # non-GRL methods are initialized by lambdas and weights
       
-      # Load psi_fn list
-      if (family == "Normal") {
-        psi_fn_list <- generate_sub_G_fn(1)
-        psi_fn_list_less <- generate_sub_G_fn(1)
-      } else if (family == "Ber") {
-        psi_fn_list <- generate_sub_B_fn(m_pre)
-        psi_fn_list_less <- generate_sub_B_fn(1 - m_pre)
-      } else if (family == "Bounded") {
-        psi_fn_list <- generate_sub_E_fn()
-        psi_fn_list_less <- generate_sub_E_fn()
-      }
-      
-      # Compute weights and lambdas parameters
-      if (!is.null(weights) & !is.null(lambdas)) {
-        if (length(weights) != length(lambdas)) {
-          stop("Lengths of weights and lambdas are not same.")
+      if (!is.null(lambdas)) {
+        if (length(lambdas) > k_max) {
+          stop("Length of lambdas exceed k_max.")
         }
-        if (length(weights) > k_max) {
-          stop("Length of weights and lambdas exceed k_max.")
-        }
-      } else {
-        if (alternative == "greater") {
-          base_param <- compute_baseline(
-            alpha,
-            delta_lower_internal_greater,
-            delta_upper_internal_greater,
-            psi_fn_list,
-            1,
-            k_max
-          )
-          weights <- base_param$omega
-          lambdas <- base_param$lambda
-        } else if (alternative == "less") {
-          base_param_less <- compute_baseline(
-            alpha,
-            delta_lower_internal_less,
-            delta_upper_internal_less,
-            psi_fn_list_less,
-            1,
-            k_max
-          )
-          weights <- base_param_less$omega
-          if (family == "Normal" || family == "Ber") {
-            lambdas <- -base_param_less$lambda
-          } else if (family == "Bounded") {
-            lambdas <- -m_pre * base_param_less$lambda / (1 - m_pre)
-          }
+        if (is.null(weights)) {
+          # If user input lambdas but not specified weights then
+          # we use the uniform weight by default
+          weights <- rep(1.0 / length(lambdas), length(lambdas))
         } else {
-          base_param <- compute_baseline(
-            alpha,
-            delta_lower_internal_greater,
-            delta_upper_internal_greater,
-            psi_fn_list,
-            1,
-            k_max
-          )
-          base_param_less <- compute_baseline(
-            alpha,
-            delta_lower_internal_less,
-            delta_upper_internal_less,
-            psi_fn_list_less,
-            1,
-            k_max
-          )
-          weights <-
-            c(base_param$omega / 2, base_param_less$omega / 2)
-          if (family == "Normal" || family == "Ber") {
-            lambdas <- c(base_param$lambda, -base_param_less$lambda)
-          } else if (family == "Bounded") {
-            lambdas <-
-              c(base_param$lambda,-m_pre * base_param_less$lambda / (1 - m_pre))
+          if (length(weights) != length(lambdas)) {
+            stop("Lengths of weights and lambdas are not same.")
           }
         }
-        
+      } else {
+        exp_params <- convertDeltaToExpParams(family,
+                                              alternative,
+                                              threshold,
+                                              m_pre,
+                                              delta_lower,
+                                              delta_upper,
+                                              k_max)
+        weights <- exp_params$weights
+        lambdas <- exp_params$lambdas
       }
       
       # Initialize stcp Cpp-object
