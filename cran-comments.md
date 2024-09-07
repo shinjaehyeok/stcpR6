@@ -1,9 +1,11 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Converted the DESCRIPTION title to title case.
+* Improve test coverage for GLR-CUSUM methods
 
-* Fix cpp related warnings by updating abs to std::abs
+* Refactor Stcp constructor
+
+* Simplify input check logic
 
 ## R CMD check results
 
