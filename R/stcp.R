@@ -127,7 +127,6 @@ Stcp <- R6::R6Class(
       if (threshold <= 0) {
         stop("threshold must be positive.")
       }
-      
       alpha <- exp(-threshold)
       
       delta_check_output <- checkDeltaRange(method, family, alternative, m_pre, delta_lower, delta_upper)
@@ -163,68 +162,78 @@ Stcp <- R6::R6Class(
         delta_lower <- 0
         weights <- NULL
         lambdas <- NULL
-        
-        return()
       }
       
-      # Initialize stcp for non-GLR methods
+      # Initialize stcp for exponential baseline methods
       # If input weights or lamdas is empty then
-      # non-GRL methods are initialized by lambdas and weights
-      
-      if (!is.null(lambdas)) {
-        if (length(lambdas) > k_max) {
-          stop("Length of lambdas exceed k_max.")
-        }
-        if (is.null(weights)) {
-          # If user input lambdas but not specified weights then
-          # we use the uniform weight by default
-          weights <- rep(1.0 / length(lambdas), length(lambdas))
-        } else {
-          if (length(weights) != length(lambdas)) {
-            stop("Lengths of weights and lambdas are not same.")
+      # exponential baseline methods are initialized by lambdas and weights
+      if (method == "ST" || method == "SR" || method == "CU") {
+        if (!is.null(lambdas)) {
+          if (length(lambdas) > k_max) {
+            stop("Length of lambdas exceed k_max.")
           }
+          if (is.null(weights)) {
+            # If user input lambdas but not specified weights then
+            # we use the uniform weight by default
+            weights <- rep(1.0 / length(lambdas), length(lambdas))
+          } else {
+            if (length(weights) != length(lambdas)) {
+              stop("Lengths of weights and lambdas are not same.")
+            }
+          }
+        } else {
+          exp_params <- convertDeltaToExpParams(family,
+                                                alternative,
+                                                threshold,
+                                                m_pre,
+                                                delta_lower,
+                                                delta_upper,
+                                                k_max)
+          weights <- exp_params$weights
+          lambdas <- exp_params$lambdas
         }
-      } else {
-        exp_params <- convertDeltaToExpParams(family,
-                                              alternative,
-                                              threshold,
-                                              m_pre,
-                                              delta_lower,
-                                              delta_upper,
-                                              k_max)
-        weights <- exp_params$weights
-        lambdas <- exp_params$lambdas
       }
       
-      # Initialize stcp Cpp-object
-      if (family == "Normal") {
-        if (method == "ST") {
+      # Initialize ST method
+      if (method == "ST") {
+        if (family == "Normal") {
           private$m_stcpCpp <- StcpMixESTNormal$new(threshold, weights, lambdas, m_pre, 1)
-        } else if (method == "SR") {
-          private$m_stcpCpp <- StcpMixESRNormal$new(threshold, weights, lambdas, m_pre, 1)
-          
-          
-        } else if (method == "CU") {
-          private$m_stcpCpp <- StcpMixECUNormal$new(threshold, weights, lambdas, m_pre, 1)
-          
-        }
-      } else if (family == "Ber") {
-        if (method == "ST") {
+        } else if (family == "Ber") {
           private$m_stcpCpp <- StcpMixESTBer$new(threshold, weights, lambdas, m_pre)
-        } else if (method == "SR") {
-          private$m_stcpCpp <- StcpMixESRBer$new(threshold, weights, lambdas, m_pre)
-        } else if (method == "CU") {
-          private$m_stcpCpp <- StcpMixECUBer$new(threshold, weights, lambdas, m_pre)
-        }
-      } else if (family == "Bounded") {
-        if (method == "ST") {
+        } else if (family == "Bounded") {
           private$m_stcpCpp <- StcpMixESTBounded$new(threshold, weights, lambdas, m_pre)
-        } else if (method == "SR") {
-          private$m_stcpCpp <- StcpMixESRBounded$new(threshold, weights, lambdas, m_pre)
-        } else if (method == "CU") {
-          private$m_stcpCpp <- StcpMixECUBounded$new(threshold, weights, lambdas, m_pre)
+        } else {
+          stop("Unsupported family for ST method")
         }
       }
+      
+      # Initialize SR method
+      if (method == "SR") {
+        if (family == "Normal") {
+          private$m_stcpCpp <- StcpMixESRNormal$new(threshold, weights, lambdas, m_pre, 1)
+        } else if (family == "Ber") {
+          private$m_stcpCpp <- StcpMixESRBer$new(threshold, weights, lambdas, m_pre)
+        } else if (family == "Bounded") {
+          private$m_stcpCpp <- StcpMixESRBounded$new(threshold, weights, lambdas, m_pre)
+        } else {
+          stop("Unsupported family for SR method")
+        }
+      }
+      
+      # Initialize CU method
+      if (method == "CU") {
+        if (family == "Normal") {
+          private$m_stcpCpp <- StcpMixECUNormal$new(threshold, weights, lambdas, m_pre, 1)
+        } else if (family == "Ber") {
+          private$m_stcpCpp <- StcpMixECUBer$new(threshold, weights, lambdas, m_pre)
+        } else if (family == "Bounded") {
+          private$m_stcpCpp <- StcpMixECUBounded$new(threshold, weights, lambdas, m_pre)
+        } else {
+          stop("Unsupported family for CU method")
+        }
+      }
+      
+      # Initialize private fields
       private$m_method <- method
       private$m_family <- family
       private$m_alternative <- alternative
@@ -236,7 +245,6 @@ Stcp <- R6::R6Class(
       private$m_k_max <- k_max
       private$m_weights <- weights
       private$m_lambdas <- lambdas
-      
     },
     #' @description
     #' Print summary of Stcp object.
