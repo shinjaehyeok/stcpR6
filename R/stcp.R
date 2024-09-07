@@ -176,6 +176,8 @@ Stcp <- R6::R6Class(
         }
         
         # Check delta_lower is within boundary for Ber and Bounded cases
+        # For Ber, post-change parameter must be strictly within (0,1)
+        # For Bounded case, post-change parameter can include 0 or 1.
         if (family == "Ber") {
           if (alternative != "less") {
             if (m_pre + delta_lower >= 1) {
