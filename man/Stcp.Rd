@@ -16,9 +16,9 @@ stcp <- Stcp$new(method = "ST",
                  alternative = "greater",
                  threshold = log(1 / 0.05),
                  m_pre = 0)
-                 
+
 # Update the observations
-obs <- c(1.0, 3.0, 2.0)            
+obs <- c(1.0, 3.0, 2.0)
 stcp$updateLogValuesUntilStop(obs)
 
 # Check whether the sequential test is stopped
@@ -40,7 +40,7 @@ stcp$getThreshold() # 2.995732
 stcp$reset()
 
 # Rerun the test but, at this time, we track updated log values
-log_values <- stcp$updateAndReturnHistories(obs) 
+log_values <- stcp$updateAndReturnHistories(obs)
 print(log_values) # 0.1159777 2.7002207 4.4255551 1.9746508
 
 # Again, the test was stopped at 3rd observation
@@ -52,16 +52,16 @@ stcp$getTime() # 4
 # Print overall summary
 stcp # or stcp$print() or print(stcp)
 # stcp Model:
-#   - Method:  ST 
-# - Family:  Normal 
-# - Alternative:  greater 
-# - Alpha:  0.05 
-# - m_pre:  0 
-# - Num. of mixing components:  55 
-# - Obs. have been passed:  4 
-# - Current log value:  1.974651 
-# - Is stopped before:  TRUE 
-# - Stopped time:  3 
+#   - Method:  ST
+# - Family:  Normal
+# - Alternative:  greater
+# - Alpha:  0.05
+# - m_pre:  0
+# - Num. of mixing components:  55
+# - Obs. have been passed:  4
+# - Current log value:  1.974651
+# - Is stopped before:  TRUE
+# - Stopped time:  3
 
 }
 \section{Methods}{

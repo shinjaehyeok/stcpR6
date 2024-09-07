@@ -130,6 +130,22 @@ Stcp <- R6::R6Class(
       
       alpha <- exp(-threshold)
       
+      delta_check_output <- checkDeltaRange(
+        method,
+        family,
+        alternative,
+        m_pre,
+        delta_lower,
+        delta_upper
+      )
+      
+      if (delta_check_output$is_acceptable) {
+        delta_upper <- delta_check_output$delta_upper
+      } else {
+        stop(delta_check_output$error_message)
+      }
+      
+      # Initialize stcp for GLRCU method
       # If method = GLRCU, we do not use delta_lower and delta_upper
       if (method == "GLRCU") {
         if (family == "Normal") {
@@ -157,6 +173,9 @@ Stcp <- R6::R6Class(
         
         return()
       }
+      
+      # Initialize stcp for non-GLR methods
+      # Check input requirements for each method
       
       if (delta_lower <= 0 && method != "GLRCU") {
         stop("delta_lower must be positive.")
