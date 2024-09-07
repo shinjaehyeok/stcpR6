@@ -15,7 +15,6 @@ Description: Algorithms of nonparametric sequential test and online
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
 Imports:
     methods, Rcpp (>= 1.0.12), R6
 LinkingTo: Rcpp
