@@ -40,22 +40,6 @@ You can also install the development version of stcpR6 from
 devtools::install_github("shinjaehyeok/stcpR6")
 ```
 
-## Citation info
-
-Shin, Jaehyeok (2024), stcpR6: Sequential Test and Change-Point
-detection algorithms based on E-values / E-detectors,
-<https://CRAN.R-project.org/package=stcpR6>
-
-``` bibtex
-@Manual{stcpR6,
-  title = {stcpR6: Sequential Test and Change-Point detection algorithms based on E-values / E-detectors},
-  author = {Shin, Jaehyeok},
-  year = {2024},
-  note = {R package version 0.9.7},
-  url = {https://CRAN.R-project.org/package=stcpR6},
-}
-```
-
 ## Example
 
 ### Setup: tracking prediction accuracy.
@@ -264,3 +248,19 @@ abline(v = e_detector$getStoppedTime(), col = 2, lty = 2)
 ```
 
 <img src="man/figures/README-fig5-1.png" width="100%" />
+
+## Citation info
+
+Shin, Jaehyeok (2024), stcpR6: Sequential Test and Change-Point
+detection algorithms based on E-values / E-detectors,
+<https://CRAN.R-project.org/package=stcpR6>
+
+``` bibtex
+@Manual{stcpR6,
+  title = {stcpR6: Sequential Test and Change-Point detection algorithms based on E-values / E-detectors},
+  author = {Shin, Jaehyeok},
+  year = {2024},
+  note = {R package version 0.9.7},
+  url = {https://CRAN.R-project.org/package=stcpR6},
+}
+```
