@@ -7,7 +7,7 @@ test_that("Less and two.sided - 1. Normal", {
     method = "ST",
     family = "Normal",
     alternative = "greater",
-    threshold = log(1 / 0.05),
+    threshold = log(1 / 0.025),
     m_pre = mu,
     delta_lower = dl,
     delta_upper = du
@@ -17,7 +17,7 @@ test_that("Less and two.sided - 1. Normal", {
     method = "ST",
     family = "Normal",
     alternative = "less",
-    threshold = log(1 / 0.05),
+    threshold = log(1 / 0.025),
     m_pre = mu,
     delta_lower = dl,
     delta_upper = du
@@ -52,7 +52,7 @@ test_that("Less and two.sided - 1. Normal", {
     method = "ST",
     family = "Normal",
     alternative = "greater",
-    threshold = log(1 / 0.05),
+    threshold = log(1 / 0.025),
     m_pre = -mu,
     delta_lower = dl,
     delta_upper = du
@@ -71,7 +71,7 @@ test_that("Less and two.sided - 2. Ber", {
     method = "ST",
     family = "Ber",
     alternative = "greater",
-    threshold = log(1 / 0.05),
+    threshold = log(1 / 0.025),
     m_pre = p,
     delta_lower = dl,
     delta_upper = du
@@ -81,7 +81,7 @@ test_that("Less and two.sided - 2. Ber", {
     method = "ST",
     family = "Ber",
     alternative = "less",
-    threshold = log(1 / 0.05),
+    threshold = log(1 / 0.025),
     m_pre = p,
     delta_lower = dl,
     delta_upper = du
@@ -116,7 +116,7 @@ test_that("Less and two.sided - 2. Ber", {
     method = "ST",
     family = "Ber",
     alternative = "greater",
-    threshold = log(1 / 0.05),
+    threshold = log(1 / 0.025),
     m_pre = 1-p,
     delta_lower = dl,
     delta_upper = du
@@ -134,7 +134,7 @@ test_that("Less and two.sided - 3. Bounded", {
     method = "ST",
     family = "Bounded",
     alternative = "greater",
-    threshold = log(1 / 0.05),
+    threshold = log(1 / 0.025),
     m_pre = p,
     delta_lower = dl,
     delta_upper = du
@@ -144,7 +144,7 @@ test_that("Less and two.sided - 3. Bounded", {
     method = "ST",
     family = "Bounded",
     alternative = "less",
-    threshold = log(1 / 0.05),
+    threshold = log(1 / 0.025),
     m_pre = p,
     delta_lower = dl,
     delta_upper = du
@@ -179,7 +179,7 @@ test_that("Less and two.sided - 3. Bounded", {
     method = "ST",
     family = "Bounded",
     alternative = "greater",
-    threshold = log(1 / 0.05),
+    threshold = log(1 / 0.025),
     m_pre = 1-p,
     delta_lower = dl,
     delta_upper = du

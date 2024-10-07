@@ -256,7 +256,7 @@ convertDeltaToExpParams <- function(family,
     }
   } else if (alternative == "two.sided"){
     base_param <- compute_baseline(
-      alpha,
+      alpha / 2,
       delta_lower_internal_greater,
       delta_upper_internal_greater,
       psi_fn_list_greater,
@@ -264,7 +264,7 @@ convertDeltaToExpParams <- function(family,
       k_max
     )
     base_param_less <- compute_baseline(
-      alpha,
+      alpha / 2,
       delta_lower_internal_less,
       delta_upper_internal_less,
       psi_fn_list_less,
