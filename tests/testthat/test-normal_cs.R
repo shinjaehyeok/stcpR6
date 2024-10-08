@@ -20,6 +20,7 @@ test_that("Confidence sequence for Normal - 1. Simple", {
     n_lower = 2 * log(1/alpha),
     weights = NULL,
     lambdas = NULL,
+    skip_g_alpha = TRUE,
     k_max = 1000
   )
   
@@ -37,6 +38,7 @@ test_that("Confidence sequence for Normal - 1. Simple", {
     n_lower = 2 * log(1/alpha),
     weights = NULL,
     lambdas = NULL,
+    skip_g_alpha = TRUE,
     k_max = 1000
   )
   
@@ -54,6 +56,7 @@ test_that("Confidence sequence for Normal - 1. Simple", {
     n_lower = 2 * log(1/alpha),
     weights = NULL,
     lambdas = NULL,
+    skip_g_alpha = TRUE,
     k_max = 1000
   )
   

@@ -54,6 +54,8 @@ NormalCS <- R6::R6Class(
     #' @param lambdas If not null, the input lambdas will be used to initialize the object.
     #' instead of \code{n_upper} and \code{n_lower}.
     #' 
+    #' @param skip_g_alpha If true, we do not compute g_alpha and use log(1/alpha) instead.
+    #' 
     #' @param k_max Positive integer to determine the maximum number of baselines.
     #'
     #' @return A new `NormalCS` object.
@@ -64,6 +66,7 @@ NormalCS <- R6::R6Class(
                           n_lower = 1,
                           weights = NULL,
                           lambdas = NULL,
+                          skip_g_alpha = TRUE,
                           k_max = 1000) {
       # Check input parameters
       alternative <- match.arg(alternative)
@@ -95,6 +98,7 @@ NormalCS <- R6::R6Class(
                                                        n_upper,
                                                        n_lower,
                                                        generate_sub_G_fn(),
+                                                       skip_g_alpha,
                                                        n_lower,
                                                        k_max)
         stcp <- Stcp$new(

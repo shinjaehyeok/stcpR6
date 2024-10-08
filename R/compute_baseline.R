@@ -170,6 +170,7 @@ compute_baseline <- function(alpha,
 #'
 #' @param v_upper Upper bound of the target variance process bound
 #' @param v_lower Lower bound of the target variance process bound.
+#' @param skip_g_alpha If true, we do not compute g_alpha and use log(1/alpha) instead.
 #' @inheritParams compute_baseline
 #'
 #' @return A list of 1. Parameters of baseline processes, 2. Mixing weights, 3. Auxiliary values for computation.
@@ -179,6 +180,7 @@ compute_baseline_for_sample_size <- function(alpha,
                                              v_upper,
                                              v_lower,
                                              psi_fn_list = generate_sub_G_fn(),
+                                             skip_g_alpha = TRUE,
                                              v_min = 1,
                                              k_max = 200,
                                              tol = 1e-10) {
@@ -191,7 +193,9 @@ compute_baseline_for_sample_size <- function(alpha,
     v_lower <- v_min
   }
   
-  if (v_lower == v_upper) {
+  if (skip_g_alpha) {
+    g_alpha <- log(1 / alpha)
+  } else if (v_lower == v_upper) {
     # Trivial case
     g_alpha <- log(1 / alpha)
   } else {

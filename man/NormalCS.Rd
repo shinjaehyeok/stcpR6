@@ -57,6 +57,7 @@ Create a new NormalCS object.
   n_lower = 1,
   weights = NULL,
   lambdas = NULL,
+  skip_g_alpha = TRUE,
   k_max = 1000
 )}\if{html}{\out{</div>}}
 }
@@ -82,6 +83,8 @@ instead of \code{n_upper} and \code{n_lower}.}
 
 \item{\code{lambdas}}{If not null, the input lambdas will be used to initialize the object.
 instead of \code{n_upper} and \code{n_lower}.}
+
+\item{\code{skip_g_alpha}}{If true, we do not compute g_alpha and use log(1/alpha) instead.}
 
 \item{\code{k_max}}{Positive integer to determine the maximum number of baselines.}
 }
