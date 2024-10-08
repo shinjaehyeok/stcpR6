@@ -142,9 +142,9 @@ print(e_detector)
 #> - Alternative:  two.sided 
 #> - Alpha:  0.001 
 #> - m_pre:  0.5 
-#> - Num. of mixing components:  338 
+#> - Num. of mixing components:  360 
 #> - Obs. have been passed:  200 
-#> - Current log value:  4.673126 
+#> - Current log value:  4.672813 
 #> - Is stopped before:  FALSE 
 #> - Stopped time:  0
 
@@ -218,9 +218,9 @@ print(e_detector)
 #> - Alternative:  two.sided 
 #> - Alpha:  0.001 
 #> - m_pre:  0.5 
-#> - Num. of mixing components:  338 
+#> - Num. of mixing components:  360 
 #> - Obs. have been passed:  200 
-#> - Current log value:  44.92438 
+#> - Current log value:  44.92547 
 #> - Is stopped before:  TRUE 
 #> - Stopped time:  138
 
