@@ -1,4 +1,4 @@
-# stcpR6 0.9.8
+# stcpR6 (development version)
 
 # stcpR6 0.9.8
 * Two sided e-values are now based on two one-sided e-evalues tuned for alpha/2.
